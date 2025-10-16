@@ -139,7 +139,14 @@
             margin-bottom: calc(3pt * var(--conteudo-fator)); 
             word-wrap: break-word; overflow-wrap: break-word; 
         }
-        .nome-produto { font-size: calc(18pt * var(--conteudo-fator)); font-weight: 900; color: #000; white-space: normal; position: static; } 
+        
+        /* ALTERAÇÃO 1: Redução da fonte base do nome do produto (de 18pt para 16pt) */
+        .nome-produto { 
+            font-size: calc(16pt * var(--conteudo-fator)); 
+            font-weight: 600; color: #000; white-space: normal; 
+            position: static; 
+        } 
+        
         .descricao-produto { font-size: calc(10pt * var(--conteudo-fator)); font-weight: 600; color: #333; }
         .marca-produto { font-size: calc(10pt * var(--conteudo-fator)); font-weight: 600; color: #ff0000; }
         
@@ -156,16 +163,19 @@
             padding-top: calc(5pt * var(--conteudo-fator)); 
         }
 
-        /* ==================== ESTILOS DE OFERTA DUPLA (SEM R$) ==================== */
+        /* ==================== ESTILOS DE OFERTA DUPLA (ALINHAMENTO QUANTIDADE/VALOR) ==================== */
 
         .ofertas-container {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: calc(10pt * var(--conteudo-fator)); 
+            /* LINHA PARA ALTERAR: Diminui o espaço entre o bloco de cima e o divisor "OU" */
+            gap: calc(5pt * var(--conteudo-fator)); /* Alterado de 10pt para 5pt */
         }
         
         .oferta-bloco {
+            --oferta-gap: 30pt; /* Aumentado de 15pt para 25pt (Exemplo) */
+            
             display: flex;
             align-items: center; 
             justify-content: center;
@@ -173,21 +183,23 @@
             margin-top: 0;
         }
 
+        /* ALTERAÇÃO 2: Ajuste no tamanho da fonte da Quantidade (70pt -> 60pt) para igualar o valor principal */
         .oferta-quantidade-x {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: calc(70pt * var(--conteudo-fator)); 
+            font-size: calc(60pt * var(--conteudo-fator)); 
             color: #ff0000;
-            line-height: 0.8;
-            padding-right: calc(10pt * var(--conteudo-fator));
+            line-height: 0.95; /* Ajuste o line-height para alinhar melhor verticalmente */
+            padding-right: calc(15pt * var(--conteudo-fator));
             position: relative;
-            top: calc(5pt * var(--conteudo-fator)); 
+            top: calc(5pt * var(--conteudo-fator));
+            font-weight: 900;
         }
 
         .texto-e {
             font-size: calc(14pt * var(--conteudo-fator)); 
             color: #333;
             font-weight: 700;
-            margin-right: calc(5pt * var(--conteudo-fator));
+            margin-right: calc(8pt * var(--conteudo-fator));
             position: relative;
             top: calc(5pt * var(--conteudo-fator));
         }
@@ -200,7 +212,20 @@
             color: #ff0000;
             font-weight: 900;
         }
+        
+        .ofertas-container > .oferta-bloco:first-of-type .valor-principal-container {
+            /* Aumenta a distância entre o 'É' de cima e o primeiro Valor */
+            margin-left: calc(12pt * var(--conteudo-fator)); /* Ajuste 25pt para o espaço extra desejado */
+        }
+        
+        /* Seleciona o .valor-principal-container que está dentro do SEGUNDO .oferta-bloco */
+        /* Nota: O segundo bloco é o último, pois o divisor está no meio */
+        .ofertas-container > .oferta-bloco:last-of-type .valor-principal-container {
+             /* Define uma margem mais curta ou 0 para o valor de baixo */
+             margin-left: calc(4pt * var(--conteudo-fator)); /* Um espaço pequeno, ou use 0pt */
+        }
 
+        /* O Valor Principal já está em 60pt (o mesmo que a Quantidade agora) */
         .valor-principal {
             font-size: calc(60pt * var(--conteudo-fator)); 
             line-height: 0.95;
@@ -218,23 +243,31 @@
             margin-left: 0pt;
             font-family: 'Bebas Neue', sans-serif;
             position: relative;
-            top: calc(5pt * var(--conteudo-fator));
+            top: calc(6pt * var(--conteudo-fator));
         }
         
         .divisor-ou {
-            width: 90%; 
+            /* Deixa a largura total para alinhar o conteúdo */
+            width: 100%; 
             display: flex;
             align-items: center;
-            justify-content: center;
+            /* ALTERAÇÃO 1: Alinha o conteúdo (linhas e OU) à esquerda */
+            justify-content: flex-start; /* Alterado de center para flex-start */
             gap: calc(5px * var(--conteudo-fator));
-            margin: calc(5pt * var(--conteudo-fator)) auto; 
+            /* ALTERAÇÃO 2: Remove o 'auto' para evitar a centralização */
+            /* Controla a margem superior/inferior, e usa 0 para esquerda/direita */
+            margin: calc(5pt * var(--conteudo-fator)) calc(5pt * var(--conteudo-fator)); /* Ajuste o 5pt final se quiser um recuo maior da borda */
         }
         
+        /* Ajuste também a linha que acompanha, para que ela pare na esquerda. */
         .divisor-linha {
-            flex-grow: 1;
+            /* Remove a margem horizontal da linha para que ela encoste no OU, 
+               dependendo do que você quer que ela faça. Vamos manter o flex-grow */
+            flex-grow: 1; 
             height: calc(1px * var(--conteudo-fator));
             background-color: #ff0000;
-            margin: 0 calc(10px * var(--conteudo-fator));
+            /* Altera a margem para não centralizar a linha */
+            margin: 0; /* Removido o calc(10px * var(--conteudo-fator)) */
         }
         
         .divisor-ou span {
@@ -420,12 +453,13 @@
 
         /**
          * Ajusta o tamanho da fonte do nome do produto com base no fator de conteúdo.
+         * NOTA: A fonte base foi ajustada no CSS (de 18pt para 16pt)
          */
         function ajustarFonteProduto(etiquetaElement, larguraMM, fatorConteudo) {
             const nomeProdutoEl = etiquetaElement.querySelector('.nome-produto');
             if (!nomeProdutoEl) return;
             
-            const baseFontSize = 18; 
+            const baseFontSize = 16; // Alterado para 16pt
             const minFontSize = 10;
             const fator = fatorConteudo; 
 
