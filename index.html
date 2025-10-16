@@ -13,9 +13,12 @@
             --cor-fundo: #f8f9fb;
             --cor-cheio: #00b894;
             --cor-oferta: #e74c3c;
-            --sombra-suave: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --sombra-suave: 0 10px 30px rgba(0, 0, 0, 0.1);
             --cor-titulo: #2c3e50;
-            --gradiente-btn: linear-gradient(135deg, #6aace8, #3f7bbf);
+            /* Gradiente mais vibrante */
+            --gradiente-btn-cheio: linear-gradient(145deg, #00b894 0%, #00997d 100%); 
+            --gradiente-btn-dupla: linear-gradient(145deg, #e74c3c 0%, #c0392b 100%);
+            --gradiente-principal: linear-gradient(160deg, #3f7bbf, #6aace8);
         }
 
         body {
@@ -32,98 +35,130 @@
 
         .menu-container {
             background: #ffffff;
-            padding: 35px;
-            border-radius: 20px;
+            padding: 40px; /* Aumentado */
+            border-radius: 25px; /* Arredondado */
             box-shadow: var(--sombra-suave);
             text-align: center;
-            max-width: 450px;
+            max-width: 480px; /* Aumentado */
             width: 100%;
-            transition: transform 0.3s ease;
-        }
-
-        .menu-container:hover {
-            transform: translateY(-3px);
+            border-top: 5px solid var(--cor-principal); /* Detalhe moderno */
         }
 
         .titulo-principal {
             color: var(--cor-titulo);
-            font-size: 2.2em;
+            font-size: 2.4em; /* Aumentado */
             font-weight: 900;
             margin-bottom: 5px;
             text-transform: uppercase;
             line-height: 1.1;
         }
-
-        h1 {
-            color: var(--cor-principal);
-            margin-bottom: 30px;
-            font-size: 1.2em;
-            font-weight: 600;
+        
+        .subtitulo {
+            color: #7f8c8d; /* Cinza suave */
+            margin-bottom: 40px; /* Mais espaço */
+            font-size: 1.1em;
+            font-weight: 400;
         }
 
         .opcoes {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px; /* Aumentado */
         }
 
         .opcao-btn {
             display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 60px;
-            padding: 12px 20px;
+            justify-content: space-between; /* Alinha o ícone à esquerda e o texto ao centro */
+            min-height: 70px; /* Aumentado */
+            padding: 15px 30px; 
             border: none;
-            border-radius: 12px;
+            border-radius: 15px;
             cursor: pointer;
-            font-size: 1.05em;
-            font-weight: 600;
+            font-size: 1.1em;
+            font-weight: 700;
             text-decoration: none;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Sombra mais forte */
+            text-align: left;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* Efeito de brilho ao passar o mouse */
+        .opcao-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: transform 0.5s;
+            transform: scaleX(0);
+            transform-origin: left;
+            z-index: 1;
+        }
+
+        .opcao-btn:hover::after {
+            transform: scaleX(1);
+        }
+        
+        /* Estilos específicos para cada botão */
         .opcao-btn.cheio {
-            background: var(--gradiente-btn);
+            background: var(--gradiente-btn-cheio);
             color: white;
         }
         
         .opcao-btn.oferta {
-            background: var(--cor-oferta);
+            background: var(--gradiente-btn-dupla);
             color: white;
         }
 
         .opcao-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px); /* Efeito 3D mais pronunciado */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
         }
 
-        .opcao-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        /* Estilo do Texto do Botão */
+        .opcao-texto {
+            flex-grow: 1;
+            text-align: center;
+            z-index: 2;
+        }
+
+        /* Estilo do Ícone (Simulado) */
+        .opcao-icone {
+            font-size: 1.8em;
+            font-weight: 900;
+            opacity: 0.8;
+            z-index: 2;
         }
 
         .atribuicao {
-            margin-top: 30px;
-            font-size: 0.9em;
+            margin-top: 40px; /* Mais espaço */
+            font-size: 0.85em;
             color: #95a5a6;
             font-weight: 400;
         }
 
         @media (max-width: 480px) {
             .menu-container {
-                padding: 25px 20px;
-                border-radius: 16px;
+                padding: 30px 20px;
             }
             .titulo-principal {
-                font-size: 1.8em;
+                font-size: 2em;
             }
-            h1 {
-                font-size: 1.1em;
+            .subtitulo {
+                font-size: 1em;
             }
             .opcao-btn {
                 font-size: 1em;
-                min-height: 55px;
+                min-height: 60px;
+                padding: 10px 20px;
+            }
+            .opcao-icone {
+                font-size: 1.5em;
             }
         }
     </style>
@@ -132,18 +167,22 @@
 
     <div class="menu-container">
         <div class="titulo-principal">
-            Gerador de Etiquetas Grupo Mega
+            Gerador de Etiquetas
         </div>
         
-        <h1>Selecione o Tipo de Etiqueta</h1>
+        <div class="subtitulo">
+            Grupo Mega - Selecione o Tipo de Etiqueta
+        </div>
         
         <div class="opcoes">
             <a href="index_PrecoCheio.html" class="opcao-btn cheio">
-                Etiqueta Padrão (R$ X,XX CADA) 🏷️
+                <span class="opcao-icone">R$</span>
+                <span class="opcao-texto">Etiqueta Padrão (R$ X,XX CADA)</span>
             </a>
             
             <a href="index_PrecoOferta.html" class="opcao-btn oferta">
-                Etiqueta Dupla (Oferta X por Y) 🔥
+                <span class="opcao-icone">X/Y</span>
+                <span class="opcao-texto">Etiqueta Dupla (Oferta X por Y)</span>
             </a>
         </div>
 
