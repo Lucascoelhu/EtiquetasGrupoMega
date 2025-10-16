@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Principal - Gerador de Etiquetas</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-principal: #3f7bbf;
+            --cor-fundo: #f8f9fb;
+            --cor-cheio: #00b894;
+            --cor-oferta: #e74c3c;
+            --sombra-suave: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --cor-titulo: #2c3e50;
+            --gradiente-btn: linear-gradient(135deg, #6aace8, #3f7bbf);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--cor-fundo);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .menu-container {
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: var(--sombra-suave);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-container:hover {
+            transform: translateY(-3px);
+        }
+
+        .titulo-principal {
+            color: var(--cor-titulo);
+            font-size: 2.2em;
+            font-weight: 900;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        h1 {
+            color: var(--cor-principal);
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .opcoes {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .opcao-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.05em;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .opcao-btn.cheio {
+            background: var(--gradiente-btn);
+            color: white;
+        }
+        
+        .opcao-btn.oferta {
+            background: var(--cor-oferta);
+            color: white;
+        }
+
+        .opcao-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .opcao-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .atribuicao {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #95a5a6;
+            font-weight: 400;
+        }
+
+        @media (max-width: 480px) {
+            .menu-container {
+                padding: 25px 20px;
+                border-radius: 16px;
+            }
+            .titulo-principal {
+                font-size: 1.8em;
+            }
+            h1 {
+                font-size: 1.1em;
+            }
+            .opcao-btn {
+                font-size: 1em;
+                min-height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-container">
+        <div class="titulo-principal">
+            Gerador de Etiquetas Grupo Mega
+        </div>
+        
+        <h1>Selecione o Tipo de Etiqueta</h1>
+        
+        <div class="opcoes">
+            <a href="index_PrecoCheio.html" class="opcao-btn cheio">
+                Etiqueta Padrão (R$ X,XX CADA) 🏷️
+            </a>
+            
+            <a href="index_PrecoOferta.html" class="opcao-btn oferta">
+                Etiqueta Dupla (Oferta X por Y) 🔥
+            </a>
+        </div>
+
+        <div class="atribuicao">
+            Por: Lucas Coelho, 2025
+        </div>
+    </div>
+
+</body>
+</html>

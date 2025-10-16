@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Etiquetas de Oferta Dupla - Scalable Print</title>
+    
+    <style>
+        /* ==================== IMPORT DE FONTES ==================== */
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700;900&display=swap');
+        
+        /* ==================== ESTILOS GERAIS E FORMULÁRIO ==================== */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container-principal {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap; 
+        }
+
+        .formulario {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px; 
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .formulario label {
+            display: block;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        /* Estilo para select e inputs */
+        .formulario select,
+        .formulario input[type="text"], 
+        .formulario input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        
+        /* Estilo para campos desabilitados */
+        .formulario input[disabled] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        .botoes-acao {
+             display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .botoes-acao button {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+        #btnAddEtiqueta { background-color: #4CAF50; color: white; }
+        #btnPrint, #btnLimpar { background-color: #3f7bbf; color: white; }
+
+        .container-etiquetas-impressao {
+            flex-grow: 1;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+        }
+
+        #etiquetas-output {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* ==================== ESTILOS BASE DA ETIQUETA (COM ESCALA) ==================== */
+        .etiqueta {
+            /* Variáveis CSS padrão - Serão definidas pelo JS */
+            --etiqueta-largura: 74mm; 
+            --etiqueta-altura: 105mm;
+            --escala-fator-display: 1; /* Escala para caber na tela */
+            --conteudo-fator: 1; /* Escala para o texto e espaçamento */
+
+            width: var(--etiqueta-largura); 
+            height: var(--etiqueta-altura); 
+            
+            border: 1px solid #ccc; 
+            padding: calc(3mm * var(--conteudo-fator)); 
+            box-sizing: border-box; 
+            page-break-inside: avoid; 
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: space-between; 
+            position: relative; 
+            overflow: hidden;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); 
+            
+            /* Escala apenas para a visualização na tela */
+            transform: scale(var(--escala-fator-display, 1)); 
+            transform-origin: top left; 
+            margin: 0; 
+        }
+        
+        /* Ajuste de margem para as etiquetas na lista, compensando a escala de visualização */
+        #etiquetas-output .etiqueta {
+            /* Fórmula para compensar a margem causada pela redução do zoom (transform: scale) */
+            margin-bottom: calc(var(--etiqueta-altura) * (var(--escala-fator-display, 1) - 1) * -1 + 10px);
+            margin-right: calc(var(--etiqueta-largura) * (var(--escala-fator-display, 1) - 1) * -1 + 10px);
+        }
+
+        /* Conteúdo e Tipografia */
+        .oferta-tag { 
+            font-family: 'Bebas Neue', sans-serif; 
+            font-size: calc(24pt * var(--conteudo-fator)); 
+            color: #ff0000; font-weight: 900; text-transform: uppercase; 
+            margin-bottom: calc(5pt * var(--conteudo-fator)); 
+        }
+        .info-produto-container { width: 100%; text-align: center; }
+        
+        .nome-produto, .descricao-produto, .marca-produto { 
+            line-height: 1.1; text-transform: uppercase; 
+            margin-bottom: calc(3pt * var(--conteudo-fator)); 
+            word-wrap: break-word; overflow-wrap: break-word; 
+        }
+        .nome-produto { font-size: calc(18pt * var(--conteudo-fator)); font-weight: 900; color: #000; white-space: normal; position: static; } 
+        .descricao-produto { font-size: calc(10pt * var(--conteudo-fator)); font-weight: 600; color: #333; }
+        .marca-produto { font-size: calc(10pt * var(--conteudo-fator)); font-weight: 600; color: #ff0000; }
+        
+        .peso-produto { 
+            position: absolute; 
+            top: calc(10mm * var(--conteudo-fator)); 
+            right: calc(5mm * var(--conteudo-fator)); 
+            font-size: calc(8pt * var(--conteudo-fator)); 
+            font-weight: 700; color: #333; transform: rotate(-10deg); 
+        }
+        .logo-empresa { 
+            width: calc(60pt * var(--conteudo-fator)); 
+            margin-top: auto; 
+            padding-top: calc(5pt * var(--conteudo-fator)); 
+        }
+
+        /* ==================== ESTILOS DE OFERTA DUPLA (SEM R$) ==================== */
+
+        .ofertas-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: calc(10pt * var(--conteudo-fator)); 
+        }
+        
+        .oferta-bloco {
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+            width: 100%;
+            margin-top: 0;
+        }
+
+        .oferta-quantidade-x {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: calc(70pt * var(--conteudo-fator)); 
+            color: #ff0000;
+            line-height: 0.8;
+            padding-right: calc(10pt * var(--conteudo-fator));
+            position: relative;
+            top: calc(5pt * var(--conteudo-fator)); 
+        }
+
+        .texto-e {
+            font-size: calc(14pt * var(--conteudo-fator)); 
+            color: #333;
+            font-weight: 700;
+            margin-right: calc(5pt * var(--conteudo-fator));
+            position: relative;
+            top: calc(5pt * var(--conteudo-fator));
+        }
+
+        .valor-principal-container {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+            top: calc(5pt * var(--conteudo-fator));
+            color: #ff0000;
+            font-weight: 900;
+        }
+
+        .valor-principal {
+            font-size: calc(60pt * var(--conteudo-fator)); 
+            line-height: 0.95;
+            letter-spacing: calc(1pt * var(--conteudo-fator)); 
+            font-family: 'Bebas Neue', sans-serif;
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+            top: 0; 
+        }
+
+        .valor-principal .centavos {
+            font-size: calc(30pt * var(--conteudo-fator)); 
+            font-weight: 700;
+            margin-left: 0pt;
+            font-family: 'Bebas Neue', sans-serif;
+            position: relative;
+            top: calc(5pt * var(--conteudo-fator));
+        }
+        
+        .divisor-ou {
+            width: 90%; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: calc(5px * var(--conteudo-fator));
+            margin: calc(5pt * var(--conteudo-fator)) auto; 
+        }
+        
+        .divisor-linha {
+            flex-grow: 1;
+            height: calc(1px * var(--conteudo-fator));
+            background-color: #ff0000;
+            margin: 0 calc(10px * var(--conteudo-fator));
+        }
+        
+        .divisor-ou span {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: calc(16pt * var(--conteudo-fator));
+            font-weight: 900;
+            color: #ff0000;
+            padding: 0 calc(5px * var(--conteudo-fator));
+        }
+
+        /* ==================== ESTILOS DE IMPRESSÃO (TAMANHO REAL) ==================== */
+        @media print {
+            .formulario, button, .container-principal h2, .container-etiquetas-impressao h3, .botoes-acao {
+                display: none;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
+
+            .container-etiquetas-impressao {
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                min-height: auto;
+            }
+            
+            .etiqueta {
+                /* Força o uso das dimensões reais em MM e anula qualquer escala de visualização */
+                width: var(--etiqueta-largura) !important; 
+                height: var(--etiqueta-altura) !important;
+                border: 1px dashed #ccc; /* Borda tracejada para facilitar o corte */
+                margin: 0; 
+                float: left; 
+                box-shadow: none; 
+                transform: none !important; 
+                /* Garante que o conteúdo seja renderizado com a escala 1.0 para o tamanho real */
+                --conteudo-fator: 1.0 !important; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-principal">
+        <div class="formulario">
+            <h2>Adicionar Oferta Dupla</h2>
+            <form id="formEtiqueta">
+                
+                <h4 style="margin-top: 15px;">DIMENSÕES (mm)</h4>
+                <label for="tipoDimensao">Escolha o Padrão:</label>
+                <select id="tipoDimensao" onchange="handleDimensionChange()">
+                    <option value="A7" selected>A7 (74mm x 105mm)</option>
+                    <option value="A6">A6 (105mm x 148mm)</option>
+                    <option value="A5">A5 (148mm x 210mm)</option>
+                    <option value="A4">A4 (210mm x 297mm)</option>
+                    <option value="CUSTOM">Personalizado</option>
+                </select>
+                
+                <label for="larguraEtiqueta">Largura da Etiqueta (mm):</label>
+                <input type="number" id="larguraEtiqueta" value="74" step="1">
+                
+                <label for="alturaEtiqueta">Altura da Etiqueta (mm):</label>
+                <input type="number" id="alturaEtiqueta" value="105" step="1">
+                
+                <hr style="margin-top: 20px;">
+                
+                <label for="produto">Produto:</label>
+                <input type="text" id="produto" placeholder="Ex: Pão de Forma" required>
+                
+                <label for="descricao">Descrição:</label>
+                <input type="text" id="descricao" placeholder="Ex: Tradicional">
+                
+                <label for="marca">Marca:</label>
+                <input type="text" id="marca" placeholder="Ex: Pullman">
+
+                <h4 style="margin-top: 15px;">OPÇÃO 1 (Principal)</h4>
+                <label for="quantidadeX1">Quantidade (X1):</label>
+                <input type="number" id="quantidadeX1" step="1" value="1" required>
+
+                <label for="precoTotalY1">Preço Total (Y1):</label>
+                <input type="number" id="precoTotalY1" step="0.01" placeholder="Ex: 4.00" required>
+                
+                <h4 style="margin-top: 15px;">OPÇÃO 2 (Adicional)</h4>
+                <label for="quantidadeX2">Quantidade (X2):</label>
+                <input type="number" id="quantidadeX2" step="1" value="3" required>
+
+                <label for="precoTotalY2">Preço Total (Y2):</label>
+                <input type="number" id="precoTotalY2" step="0.01" placeholder="Ex: 10.00" required>
+
+                <label for="peso">Peso/Volume (Opcional):</label>
+                <input type="text" id="peso" placeholder="Ex: 450g ou 1 Litro">
+            </form>
+
+            <div class="botoes-acao">
+                <button id="btnAddEtiqueta" onclick="adicionarEtiqueta()">Adicionar Etiqueta</button>
+            </div>
+            <div class="botoes-acao">
+                <button id="btnPrint" onclick="window.print()">Imprimir Etiquetas</button>
+                <button id="btnLimpar" onclick="limparEtiquetas()">Limpar Lista</button>
+            </div>
+        </div>
+
+        <div class="container-etiquetas-impressao">
+            <h3>Lista de Etiquetas para Impressão:</h3>
+            <div id="etiquetas-output">
+                <p>Use o formulário ao lado para gerar ofertas Duplas.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==================== LÓGICA JAVASCRIPT ==================== */
+        
+        const BASE_WIDTH_MM = 74; // Largura base do A7, usada para calcular a proporção do conteúdo
+        const MM_TO_PX = 3.77953; // Fator de conversão (milímetros para pixels em 96 DPI)
+
+        // Dimensões A-Series em mm (Largura x Altura)
+        const DIMS = {
+            A7: { largura: 74, altura: 105 },
+            A6: { largura: 105, altura: 148 },
+            A5: { largura: 148, altura: 210 },
+            A4: { largura: 210, altura: 297 },
+            CUSTOM: null
+        };
+        
+        /**
+         * Altera os campos de dimensão (Largura e Altura) conforme a seleção do usuário.
+         */
+        function handleDimensionChange() {
+            const select = document.getElementById('tipoDimensao');
+            const larguraInput = document.getElementById('larguraEtiqueta');
+            const alturaInput = document.getElementById('alturaEtiqueta');
+            const tipo = select.value;
+
+            if (tipo === 'CUSTOM') {
+                // Habilita a edição para Customizado, mas mantém os valores atuais
+                larguraInput.disabled = false;
+                alturaInput.disabled = false;
+            } else {
+                const dimensoes = DIMS[tipo];
+                larguraInput.value = dimensoes.largura;
+                alturaInput.value = dimensoes.altura;
+                
+                // Desabilita a edição para tamanhos padrão
+                larguraInput.disabled = true;
+                alturaInput.disabled = true;
+            }
+
+            // Força a atualização de todas as etiquetas com as novas dimensões
+            updateAllEtiquetas();
+        }
+
+        /**
+         * Retorna as dimensões atuais e os fatores de escala para display e conteúdo.
+         */
+        function obterDimensoesEEScala() {
+            const larguraMM = parseFloat(document.getElementById('larguraEtiqueta').value) || DIMS.A7.largura;
+            const alturaMM = parseFloat(document.getElementById('alturaEtiqueta').value) || DIMS.A7.altura;
+
+            // Fator de escala do CONTEÚDO (para ajustar fontes, padding, etc)
+            const fatorConteudo = larguraMM / BASE_WIDTH_MM;
+            
+            // Fator de escala de VISUALIZAÇÃO (para caber no container - max 280px de largura)
+            const fatorDisplay = Math.min(1, 280 / (larguraMM * MM_TO_PX));
+
+            return { larguraMM, alturaMM, fatorDisplay, fatorConteudo };
+        }
+        
+        /**
+         * Aplica as dimensões reais e os fatores de escala às variáveis CSS da etiqueta.
+         */
+        function aplicarDimensoesEEScala(etiquetaElement, larguraMM, alturaMM, fatorDisplay, fatorConteudo) {
+            etiquetaElement.style.setProperty('--etiqueta-largura', `${larguraMM}mm`);
+            etiquetaElement.style.setProperty('--etiqueta-altura', `${alturaMM}mm`);
+            
+            etiquetaElement.style.setProperty('--escala-fator-display', fatorDisplay);
+            etiquetaElement.style.setProperty('--conteudo-fator', fatorConteudo);
+        }
+
+        /**
+         * Ajusta o tamanho da fonte do nome do produto com base no fator de conteúdo.
+         */
+        function ajustarFonteProduto(etiquetaElement, larguraMM, fatorConteudo) {
+            const nomeProdutoEl = etiquetaElement.querySelector('.nome-produto');
+            if (!nomeProdutoEl) return;
+            
+            const baseFontSize = 18; 
+            const minFontSize = 10;
+            const fator = fatorConteudo; 
+
+            nomeProdutoEl.style.fontSize = Math.max(minFontSize * fator, baseFontSize * fator) + 'pt';
+        }
+
+        /**
+         * Gera o SVG da logo (Grupo Mega).
+         */
+        function gerarLogoSvg() {
+             return `
+                 <svg viewBox="0 0 100 20">
+                     <rect x="0" y="0" width="100" height="20" rx="10" fill="#66b3ff" />
+                     <rect x="0" y="0" width="100" height="20" rx="10" fill="url(#grad)" />
+                     <defs>
+                         <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                             <stop offset="0%" style="stop-color:#3f7bbf;stop-opacity:1" />
+                             <stop offset="100%" style="stop-color:#66b3ff;stop-opacity:1" />
+                         </linearGradient>
+                     </defs>
+                     <circle cx="20" cy="10" r="7" fill="white" />
+                     <text x="20" y="13" font-family="Poppins, sans-serif" font-size="8" text-anchor="middle" fill="#E60000" font-weight="900">G</text>
+                     <text x="50" y="13" font-family="Poppins, sans-serif" font-size="8" text-anchor="middle" fill="white" font-weight="700">GRUPO</text>
+                     <text x="80" y="13" font-family="Poppins, sans-serif" font-size="8" text-anchor="middle" fill="white" font-weight="700">MEGA</text>
+                 </svg>
+             `;
+        }
+        
+        /**
+         * Formata o preço float para Reais e Centavos (strings).
+         */
+        function formatarPreco(precoTotal) {
+             if (isNaN(precoTotal)) { return { reais: '0', centavos: '00' }; }
+             const precoFormatado = precoTotal.toFixed(2).replace('.', ',');
+             const partesPreco = precoFormatado.split(',');
+             return {
+                 reais: partesPreco[0],
+                 centavos: partesPreco[1]
+             };
+         }
+
+        /**
+         * Gera o HTML do bloco de preço (ex: 1 É 4,00).
+         */
+        function gerarHtmlPreco(quantidade, precoTotal) {
+            const { reais, centavos } = formatarPreco(precoTotal);
+
+            // Sem o R$
+            const valorPrincipalHtml = `<div class="valor-principal">${reais}<span class="centavos">,${centavos}</span></div>`;
+
+            return `
+                <div class="oferta-bloco">
+                    <div class="oferta-quantidade-x">${quantidade}</div>
+                    <div class="texto-e">É</div>
+                    <div class="valor-principal-container">${valorPrincipalHtml}</div>
+                </div>
+            `;
+        }
+
+        /**
+         * Percorre e atualiza as dimensões de TODAS as etiquetas já geradas.
+         */
+        function updateAllEtiquetas() {
+            const { larguraMM, alturaMM, fatorDisplay, fatorConteudo } = obterDimensoesEEScala();
+            document.querySelectorAll('#etiquetas-output .etiqueta').forEach(el => {
+                aplicarDimensoesEEScala(el, larguraMM, alturaMM, fatorDisplay, fatorConteudo);
+                ajustarFonteProduto(el, larguraMM, fatorConteudo); 
+            });
+        }
+
+        /**
+         * Cria uma nova etiqueta com os dados do formulário e adiciona à lista.
+         */
+        function adicionarEtiqueta() {
+            // 1. Pega os valores e valida
+            const nomeProduto = document.getElementById('produto').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            const marca = document.getElementById('marca').value.trim();
+            
+            const quantidadeX1 = parseInt(document.getElementById('quantidadeX1').value);
+            const precoTotalY1 = parseFloat(document.getElementById('precoTotalY1').value);
+            
+            const quantidadeX2 = parseInt(document.getElementById('quantidadeX2').value);
+            const precoTotalY2 = parseFloat(document.getElementById('precoTotalY2').value);
+            
+            const peso = document.getElementById('peso').value.trim();
+
+            if (!nomeProduto || isNaN(quantidadeX1) || quantidadeX1 <= 0 || isNaN(precoTotalY1) || precoTotalY1 <= 0 ||
+                isNaN(quantidadeX2) || quantidadeX2 <= 0 || isNaN(precoTotalY2) || precoTotalY2 <= 0) {
+                alert("Por favor, preencha todos os campos obrigatórios da oferta dupla corretamente.");
+                return;
+            }
+            
+            const { larguraMM, alturaMM, fatorDisplay, fatorConteudo } = obterDimensoesEEScala();
+            const outputDiv = document.getElementById('etiquetas-output');
+
+            // 2. Geração dos blocos de preço
+            const oferta1Html = gerarHtmlPreco(quantidadeX1, precoTotalY1);
+            const oferta2Html = gerarHtmlPreco(quantidadeX2, precoTotalY2);
+
+            // Constrói o HTML da descrição
+            let infoProdutoHtml = '';
+            if (nomeProduto) {
+                infoProdutoHtml += `<div class="nome-produto">${nomeProduto.toUpperCase()}</div>`;
+            }
+            if (descricao) {
+                infoProdutoHtml += `<div class="descricao-produto">${descricao.toUpperCase()}</div>`;
+            }
+            if (marca) {
+                infoProdutoHtml += `<div class="marca-produto">${marca.toUpperCase()}</div>`;
+            }
+            
+            // Cria o HTML da etiqueta
+            const logoSvg = gerarLogoSvg();
+            const pesoHtml = peso ? `<div class="peso-produto">${peso}</div>` : '';
+
+            const novaEtiquetaHtml = `
+                <div class="etiqueta">
+                    <div class="oferta-tag">OFERTA</div>
+                    ${pesoHtml}
+                    <div class="info-produto-container">
+                        ${infoProdutoHtml}
+                    </div>
+                    
+                    <div class="ofertas-container">
+                        ${oferta1Html}
+                        
+                        <div class="divisor-ou">
+                            <div class="divisor-linha"></div>
+                            <span>OU</span>
+                            <div class="divisor-linha"></div>
+                        </div>
+                        
+                        ${oferta2Html}
+                    </div>
+                    
+                    <div class="logo-empresa">${logoSvg}</div>
+                </div>
+            `;
+
+            // 3. Adiciona a nova etiqueta à lista
+            if (outputDiv.querySelector('p')) {
+                outputDiv.innerHTML = ''; // Remove a mensagem inicial
+            }
+            
+            const newEtiquetaContainer = document.createElement('div');
+            newEtiquetaContainer.innerHTML = novaEtiquetaHtml.trim();
+            const etiquetaElement = newEtiquetaContainer.firstChild;
+            outputDiv.appendChild(etiquetaElement);
+
+            // 4. Aplica dimensões e escala
+            aplicarDimensoesEEScala(etiquetaElement, larguraMM, alturaMM, fatorDisplay, fatorConteudo);
+            ajustarFonteProduto(etiquetaElement, larguraMM, fatorConteudo);
+            
+            // 5. Limpa o formulário de produto/preço
+            document.getElementById('produto').value = '';
+            document.getElementById('descricao').value = '';
+            document.getElementById('marca').value = '';
+            document.getElementById('precoTotalY1').value = '';
+            document.getElementById('precoTotalY2').value = '';
+            document.getElementById('peso').value = '';
+            
+            document.getElementById('produto').focus(); 
+            
+            // 6. Garante que todas as etiquetas estão na dimensão correta (embora a nova já tenha sido aplicada)
+            updateAllEtiquetas();
+        }
+        
+        function limparEtiquetas() {
+            if (confirm("Tem certeza que deseja limpar a lista de etiquetas?")) {
+                document.getElementById('etiquetas-output').innerHTML = '<p>Use o formulário ao lado para gerar ofertas Duplas.</p>';
+            }
+        }
+
+        // Inicialização: Chama a função que configura as dimensões iniciais e listeners
+        document.addEventListener('DOMContentLoaded', () => {
+             // 1. Configura as dimensões iniciais (A7) e desabilita os campos
+             handleDimensionChange(); // Simula a seleção inicial do A7
+             
+             // 2. Adiciona listeners para os inputs de dimensão (caso o CUSTOM seja selecionado depois)
+             document.getElementById('larguraEtiqueta').addEventListener('input', updateAllEtiquetas);
+             document.getElementById('alturaEtiqueta').addEventListener('input', updateAllEtiquetas);
+            
+             // 3. Garante que qualquer etiqueta preexistente (se houvesse) seja atualizada
+             updateAllEtiquetas();
+        });
+    </script>
+</body>
+</html>
