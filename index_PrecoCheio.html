@@ -95,25 +95,23 @@
       /* ==================== ESTILO DA ETIQUETA DE OFERTA ==================== */
       
       .etiqueta {
-    --fator-escala: 1; 
-    border: 1px solid #ccc;
-    display: inline-block;
-    box-sizing: border-box;
-    page-break-inside: avoid;
-    background-color: #fff;
-    display: flex; 
-    flex-direction: column;
-    /* REMOVIDO: justify-content: space-between; */ /* <-- Remova esta linha */
-    position: relative; /* Importante para que a logo absoluta se posicione em relação a ela */
-    overflow: hidden;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: width 0.3s ease, height 0.3s ease; 
-}
+        --fator-escala: 1; 
+        border: 1px solid #ccc;
+        display: inline-block;
+        box-sizing: border-box;
+        page-break-inside: avoid;
+        background-color: #fff;
+        display: flex; 
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        transition: width 0.3s ease, height 0.3s ease; 
+      }
       
       /* CONTAINER INTERNO: Ocupa o espaço necessário, sem crescer */
       .etiqueta-conteudo {
           width: 100%;
-          /* CORREÇÃO: Removido flex-grow: 1; */
           box-sizing: border-box; 
           padding: 10mm; 
           display: flex; 
@@ -121,7 +119,6 @@
           align-items: center;
           justify-content: flex-start; 
           position: relative;
-          /* Adiciona uma margem inferior para dar espaço à logo (opcional, pode ser removido) */
           margin-bottom: 8pt; 
       }
 
@@ -157,26 +154,23 @@
       }
 
       .marca-produto {
-            /* Removido o seletor .descricao-produto daqui */
-            font-size: calc(16pt * var(--fator-escala)); 
-            font-weight: 600;
-            line-height: 1.2;
-            text-transform: uppercase;
-            margin-top: calc(5pt * var(--fator-escala));
-            /* NOVO: Define a cor da marca como vermelho */
-            color: #ff0000; 
-        }
+          font-size: calc(16pt * var(--fator-escala)); 
+          font-weight: 600;
+          line-height: 1.2;
+          text-transform: uppercase;
+          margin-top: calc(5pt * var(--fator-escala));
+          color: #ff0000; 
+      }
 
-        /* NOVO BLOCO: Crie uma regra específica para a descrição */
-        .descricao-produto {
-            font-size: calc(16pt * var(--fator-escala)); 
-            font-weight: 600;
-            line-height: 1.2;
-            text-transform: uppercase;
-            margin-top: calc(5pt * var(--fator-escala));
-            /* NOVO: Define a cor da descrição como preto */
-            color: #000; 
-        }
+      /* NOVO BLOCO: Crie uma regra específica para a descrição */
+      .descricao-produto {
+          font-size: calc(16pt * var(--fator-escala)); 
+          font-weight: 600;
+          line-height: 1.2;
+          text-transform: uppercase;
+          margin-top: calc(5pt * var(--fator-escala));
+          color: #000; 
+      }
       .peso-produto {
         position: absolute;
         top: calc(25mm * var(--fator-escala)); 
@@ -185,10 +179,9 @@
         font-weight: 700;
         color: #333;
         z-index: 10;
-        /* NOVA ALTERAÇÃO: Inclinar o elemento levemente */
-        transform: rotate(-10deg); /* Gira 5 graus para a esquerda. Use 5deg para a direita. */
-    }
-    
+        transform: rotate(-10deg);
+      }
+      
       .preco-e-unidade {
         width: 100%;
         display: flex;
@@ -240,30 +233,23 @@
       }
 
       .logo-empresa {
-        /* Mantenha estas propriedades de largura e altura escalonáveis */
         width: calc(120pt * var(--fator-escala)); 
         height: auto; 
 
-    /* Remova as propriedades de fluxo flex e margem do fluxo */
-    /* REMOVIDO: margin-bottom: 5pt; */
-    /* REMOVIDO: display: block; */
-    /* REMOVIDO: align-self: center; */
-
-    /* NOVA LÓGICA DE POSICIONAMENTO ABSOLUTO */
-        position: absolute; /* Torna a logo posicionada absolutamente */
-        bottom: calc(4mm * var(--fator-escala)); /* Ajuste este valor para mover para cima/baixo */
-        left: 50%; /* Centraliza horizontalmente */
-        transform: translateX(-50%); /* Ajusta a centralização pelo próprio tamanho da logo */
-    }
+        position: absolute;
+        bottom: calc(4mm * var(--fator-escala));
+        left: 50%;
+        transform: translateX(-50%);
+      }
 
       .logo-empresa svg {
-        width: calc(120pt * var(--fator-escala)); /* Largura escalonável */
+        width: calc(120pt * var(--fator-escala));
         height: auto;
       }
 
       /* ==================== ESTILOS DE IMPRESSÃO (A4) ==================== */
       @media print {
-        .formulario, button, .container-principal h2, .container-etiquetas-impressao h3, .botoes-acao, #preview-etiqueta, hr { 
+        .formulario, button, .container-principal h2, .container-etiquetas-impressao h3, .botoes-acao, #preview-etiqueta, hr { 
           display: none;
         }
 
@@ -281,13 +267,22 @@
           min-height: auto;
         }
 
+        /* ------------------ CORREÇÃO A4 AQUI ------------------ */
         .etiqueta {
-          --fator-escala: 1 !important; 
+          --fator-escala: 1 !important; 
           border: 1px dashed #ccc;
           margin: 0;
           float: left;
           box-shadow: none;
+          
+          /* Força a etiqueta a caber dentro das margens de impressão do papel */
+          /* Isso garante que a etiqueta de 210mm não seja cortada, pois 98vw é a largura visível */
+          max-width: 98vw !important; 
+          max-height: 98vh !important;
+          width: auto !important; 
+          height: auto !important;
         }
+        /* ---------------------------------------------------- */
       }
     </style>
   </head>
@@ -300,7 +295,7 @@
             <option value="A4">A4 (210mm x 297mm) - Grande</option>
             <option value="A5">A5 (148mm x 210mm) - Médio</option>
             <option value="A6" selected>A6 (105mm x 148mm) - Pequeno (Base)</option>
-            <option value="Custom">Customizado (74mm, 105mm)</option>
+            <option value="Custom">Customizado (74mm x 105mm)</option>
         </select>
         
         <form id="formEtiqueta" oninput="atualizarPreview()"> 
