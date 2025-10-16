@@ -170,7 +170,8 @@
             display: flex;
             flex-direction: column;
             /* LINHA PARA ALTERAR: Diminui o espaço entre o bloco de cima e o divisor "OU" */
-            gap: calc(5pt * var(--conteudo-fator)); /* Alterado de 10pt para 5pt */
+            gap: calc(1pt * var(--conteudo-fator));
+            margin-top: calc(10pt * var(--conteudo-fator));
         }
         
         .oferta-bloco {
@@ -248,15 +249,14 @@
         
         .divisor-ou {
             /* ALTERAÇÃO PRINCIPAL: Garante que o container ocupe a largura total */
-            width: 100%; 
+            width: 100%;
             display: flex;
             align-items: center;
-            /* ALTERAÇÃO 1: Garante que o conteúdo comece da esquerda */
-            justify-content: flex-start; /* Essencial para alinhamento à esquerda */
+            justify-content: flex-start; 
             gap: calc(5px * var(--conteudo-fator));
-            /* ALTERAÇÃO 2: Define a margem superior/inferior, e usa um recuo (ex: 5pt) na esquerda */
-            margin: calc(5pt * var(--conteudo-fator)) 0 calc(5pt * var(--conteudo-fator)) calc(5pt * var(--conteudo-fator)); /* Top/Right(0)/Bottom/Left(5pt) */
-        }
+            /* APROXIMAÇÃO MÁXIMA: Margem vertical zerada. Mantém apenas a margem esquerda para o recuo. */
+            margin: 0 0 0 calc(5pt * var(--conteudo-fator)); 
+}
         
         .divisor-linha {
             /* ALTERAÇÃO 3: Remove o flex-grow para que a linha só ocupe o espaço mínimo */
