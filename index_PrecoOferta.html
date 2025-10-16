@@ -247,29 +247,27 @@
         }
         
         .divisor-ou {
-            /* Deixa a largura total para alinhar o conteúdo */
+            /* ALTERAÇÃO PRINCIPAL: Garante que o container ocupe a largura total */
             width: 100%; 
             display: flex;
             align-items: center;
-            /* ALTERAÇÃO 1: Alinha o conteúdo (linhas e OU) à esquerda */
-            justify-content: flex-start; /* Alterado de center para flex-start */
+            /* ALTERAÇÃO 1: Garante que o conteúdo comece da esquerda */
+            justify-content: flex-start; /* Essencial para alinhamento à esquerda */
             gap: calc(5px * var(--conteudo-fator));
-            /* ALTERAÇÃO 2: Remove o 'auto' para evitar a centralização */
-            /* Controla a margem superior/inferior, e usa 0 para esquerda/direita */
-            margin: calc(5pt * var(--conteudo-fator)) calc(5pt * var(--conteudo-fator)); /* Ajuste o 5pt final se quiser um recuo maior da borda */
+            /* ALTERAÇÃO 2: Define a margem superior/inferior, e usa um recuo (ex: 5pt) na esquerda */
+            margin: calc(5pt * var(--conteudo-fator)) 0 calc(5pt * var(--conteudo-fator)) calc(5pt * var(--conteudo-fator)); /* Top/Right(0)/Bottom/Left(5pt) */
         }
         
-        /* Ajuste também a linha que acompanha, para que ela pare na esquerda. */
         .divisor-linha {
-            /* Remove a margem horizontal da linha para que ela encoste no OU, 
-               dependendo do que você quer que ela faça. Vamos manter o flex-grow */
-            flex-grow: 1; 
+            /* ALTERAÇÃO 3: Remove o flex-grow para que a linha só ocupe o espaço mínimo */
+            /* A linha deve ser curta, então definiremos uma largura fixa (ex: 30pt) e removemos o flex-grow */
+            /* Se você quiser a linha mais longa, aumente o 30pt. Se não quiser nenhuma linha, remova esta regra. */
+            width: calc(60pt * var(--conteudo-fator)); 
+            flex-grow: 0; /* Impede que a linha force o OU para a direita */
             height: calc(1px * var(--conteudo-fator));
             background-color: #ff0000;
-            /* Altera a margem para não centralizar a linha */
-            margin: 0; /* Removido o calc(10px * var(--conteudo-fator)) */
+            margin: 0; 
         }
-        
         .divisor-ou span {
             font-family: 'Bebas Neue', sans-serif;
             font-size: calc(16pt * var(--conteudo-fator));
