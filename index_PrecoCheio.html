@@ -3,46 +3,60 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Etiquetas de Oferta Aprimorado - Escala de Fonte</title>
+    <title>Gerador de Etiquetas de Oferta Responsivo</title>
     <style>
       /* ==================== IMPORT DE FONTES ==================== */
       @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700;900&display=swap');
 
-      /* ==================== ESTILOS GERAIS E FORMULÁRIO ==================== */
+      /* ==================== ESTILOS GERAIS E FORMULÁRIO (MOBILE-FIRST) ==================== */
+      
+      :root {
+          --cor-primaria: #3f7bbf;
+          --cor-sucesso: #4CAF50;
+          --cor-fundo: #f4f4f4;
+          --cor-oferta: #ff0000;
+          --cor-sombra: rgba(0, 0, 0, 0.1);
+      }
+
       body {
         font-family: 'Poppins', sans-serif;
-        background-color: #f4f4f4;
-        padding: 20px;
+        background-color: var(--cor-fundo);
+        padding: 15px; /* Reduzido o padding para mobile */
+        margin: 0;
       }
 
       .container-principal {
         display: flex;
+        flex-direction: column; /* Padrão: empilhado (mobile) */
         gap: 20px;
-        flex-wrap: wrap;
       }
 
-      .formulario {
+      .formulario, .container-etiquetas-impressao {
         background-color: #fff;
         padding: 20px;
         border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 300px;
-        height: fit-content;
-        position: sticky;
-        top: 20px;
+        box-shadow: 0 0 10px var(--cor-sombra);
+      }
+      
+      /* Removendo o sticky e largura fixa para mobile */
+      .formulario {
+          width: 100%;
+          position: relative; 
+          top: auto;
       }
 
       .formulario label {
         display: block;
         margin-top: 10px;
         font-weight: 600;
+        font-size: 0.95em;
       }
 
       .formulario input[type="text"],
       .formulario input[type="number"],
       .formulario select {
         width: 100%;
-        padding: 8px;
+        padding: 10px; /* Aumentado o padding para toque */
         box-sizing: border-box;
         border: 1px solid #ccc;
         border-radius: 4px;
@@ -57,42 +71,83 @@
 
       .botoes-acao button {
         flex-grow: 1;
-        padding: 10px 15px;
+        padding: 12px 15px; /* Maior área de toque */
         border: none;
         border-radius: 5px;
         cursor: pointer;
         font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        transition: background-color 0.2s;
       }
 
       #btnAddEtiqueta {
-        background-color: #4CAF50;
+        background-color: var(--cor-sucesso);
         color: white;
       }
 
       #btnPrint,
       #btnLimpar {
-        background-color: #3f7bbf;
+        background-color: var(--cor-primaria);
         color: white;
       }
 
       /* Área de visualização das etiquetas */
       .container-etiquetas-impressao {
         flex-grow: 1;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        min-height: 400px;
+        min-height: 200px; /* Reduzido o min-height para mobile */
+      }
+      
+      /* Pré-visualização com scroll horizontal para telas pequenas */
+      #preview-etiqueta-wrapper {
+          overflow-x: auto; 
+          margin-bottom: 20px;
+          padding: 5px 0;
+          border-bottom: 1px solid #eee;
       }
 
+      #preview-etiqueta {
+        border: 2px solid #ff9800;
+        box-shadow: 0 0 15px rgba(255, 152, 0, 0.5);
+        display: inline-block; /* Importante para o scroll horizontal funcionar */
+      }
+      
       #etiquetas-output {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
         margin-top: 20px;
+        justify-content: center; /* Centraliza as etiquetas no mobile */
+      }
+
+      /* ==================== DESKTOP/TABLET VIEW (>= 768px) ==================== */
+      @media (min-width: 768px) {
+          body {
+              padding: 20px;
+          }
+          .container-principal {
+              flex-direction: row; /* Layout de duas colunas */
+              align-items: flex-start;
+          }
+          .formulario {
+              width: 300px;
+              position: sticky; /* Retorna o sticky no desktop */
+              top: 20px;
+          }
+          .container-etiquetas-impressao {
+              min-height: 400px;
+          }
+          #preview-etiqueta-wrapper {
+              overflow-x: visible; 
+              padding: 0;
+              border-bottom: none;
+          }
+          #etiquetas-output {
+              justify-content: flex-start; /* Alinha à esquerda no desktop */
+          }
       }
 
       /* ==================== ESTILO DA ETIQUETA DE OFERTA ==================== */
+      /* O CSS da etiqueta permanece o mesmo, mas a fonte Bebas Neue foi incluída no import inicial. */
       
       .etiqueta {
         --fator-escala: 1; 
@@ -105,11 +160,10 @@
         flex-direction: column;
         position: relative;
         overflow: hidden;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 2px 2px 5px var(--cor-sombra);
         transition: width 0.3s ease, height 0.3s ease; 
       }
       
-      /* CONTAINER INTERNO: Ocupa o espaço necessário, sem crescer */
       .etiqueta-conteudo {
           width: 100%;
           box-sizing: border-box; 
@@ -122,16 +176,10 @@
           margin-bottom: 8pt; 
       }
 
-      #preview-etiqueta {
-        border: 2px solid #ff9800;
-        box-shadow: 0 0 15px rgba(255, 152, 0, 0.5);
-        margin-bottom: 20px;
-      }
-
       /* Estilos Internos - USANDO CALC() E VAR(--FATOR-ESCALA) */
       .oferta-tag {
         font-size: calc(38pt * var(--fator-escala)); 
-        color: #ff0000;
+        color: var(--cor-oferta);
         font-weight: 900;
         text-transform: uppercase;
         margin-bottom: calc(5pt * var(--fator-escala));
@@ -141,7 +189,7 @@
         width: 100%;
         text-align: center;
         margin-bottom: calc(4pt * var(--fator-escala));
-        color: #ff0000;
+        color: var(--cor-oferta);
       }
 
       .nome-produto {
@@ -159,10 +207,9 @@
           line-height: 1.2;
           text-transform: uppercase;
           margin-top: calc(5pt * var(--fator-escala));
-          color: #ff0000; 
+          color: var(--cor-oferta); 
       }
 
-      /* NOVO BLOCO: Crie uma regra específica para a descrição */
       .descricao-produto {
           font-size: calc(16pt * var(--fator-escala)); 
           font-weight: 600;
@@ -194,7 +241,7 @@
 
       .valor-principal {
         font-size: calc(150pt * var(--fator-escala)); 
-        color: #ff0000;
+        color: var(--cor-oferta);
         font-weight: 900;
         line-height: 0.95;
         letter-spacing: calc(10pt * var(--fator-escala));
@@ -216,7 +263,6 @@
         top: calc(20pt * var(--fator-escala));
       }
       
-
       .info-adicional {
         font-size: calc(16pt * var(--fator-escala)); 
         color: #333;
@@ -249,7 +295,7 @@
 
       /* ==================== ESTILOS DE IMPRESSÃO (A4) ==================== */
       @media print {
-        .formulario, button, .container-principal h2, .container-etiquetas-impressao h3, .botoes-acao, #preview-etiqueta, hr { 
+        .formulario, button, .container-principal h2, .container-etiquetas-impressao h3, .botoes-acao, #preview-etiqueta-wrapper, hr { 
           display: none;
         }
 
@@ -266,8 +312,8 @@
           width: 100%;
           min-height: auto;
         }
-
-        /* ------------------ CORREÇÃO A4 AQUI ------------------ */
+        
+        /* CORREÇÃO A4: Força a etiqueta a caber dentro das margens de impressão */
         .etiqueta {
           --fator-escala: 1 !important; 
           border: 1px dashed #ccc;
@@ -275,14 +321,11 @@
           float: left;
           box-shadow: none;
           
-          /* Força a etiqueta a caber dentro das margens de impressão do papel */
-          /* Isso garante que a etiqueta de 210mm não seja cortada, pois 98vw é a largura visível */
           max-width: 98vw !important; 
           max-height: 98vh !important;
           width: auto !important; 
           height: auto !important;
         }
-        /* ---------------------------------------------------- */
       }
     </style>
   </head>
@@ -315,22 +358,24 @@
         <div class="botoes-acao">
           <button id="btnAddEtiqueta" onclick="adicionarEtiqueta()">Adicionar Etiqueta</button>
         </div>
-        <div class="botoes-acao">
-          <button id="btnPrint" onclick="window.print()">Imprimir Etiquetas</button>
-          <button id="btnLimpar" onclick="limparEtiquetas()">Limpar Lista</button>
+
+        <h3 style="margin-top: 30px;">Pré-visualização (Tempo Real):</h3>
+        <div id="preview-etiqueta-wrapper">
+            <div id="preview-etiqueta" class="etiqueta">
+              <p style="text-align: center; font-style: italic; color: #555; padding: 20px;">Carregando...</p>
+            </div>
         </div>
       </div>
+
       <div class="container-etiquetas-impressao">
-        <h3>Pré-visualização (Tempo Real):</h3>
-        <div id="preview-etiqueta" class="etiqueta">
-          <p style="text-align: center; font-style: italic; color: #555;">Carregando...</p>
-        </div>
-        
-        <hr>
-        
         <h3>Lista de Etiquetas para Impressão:</h3>
+        <div class="botoes-acao">
+            <button id="btnPrint" onclick="window.print()">Imprimir Etiquetas</button>
+            <button id="btnLimpar" onclick="limparEtiquetas()">Limpar Lista</button>
+        </div>
+        <hr style="border: 0; border-top: 1px solid #eee;">
         <div id="etiquetas-output">
-          <p>Use o formulário ao lado e clique em "Adicionar Etiqueta" para montar sua lista.</p>
+          <p>Use o formulário para montar sua lista.</p>
         </div>
       </div>
     </div>
@@ -391,10 +436,8 @@
           const logoSvg = gerarLogoSvg();
           const pesoHtml = peso ? `<div class="peso-produto">${peso}</div>` : '';
           
-          // 1. Definição das dimensões da etiqueta
           const styleAttr = `width: ${dimensoes.width}; height: ${dimensoes.height};`;
 
-          // 2. CÁLCULO DINÂMICO DA ESCALA DE FONTE
           const larguraAtualMM = parseFloat(dimensoes.width.replace('mm', '')); 
           const fatorEscala = (larguraAtualMM / LARGURA_REFERENCIA).toFixed(2); 
           
@@ -424,6 +467,8 @@
         const previewDiv = document.getElementById('preview-etiqueta');
         
         const dimensoes = TAMANHOS_ETIQUETA[tamanhoSelecionado] || TAMANHOS_ETIQUETA.Custom;
+        
+        // As dimensões são aplicadas na div interna 'preview-etiqueta'
         previewDiv.style.width = dimensoes.width;
         previewDiv.style.height = dimensoes.height;
 
@@ -441,12 +486,15 @@
           const novaEtiqueta = doc.querySelector('.etiqueta');
           
           if (novaEtiqueta) {
+            // Aplicar os estilos dinâmicos (incluindo width/height e --fator-escala)
             previewDiv.style.cssText = novaEtiqueta.style.cssText;
             previewDiv.innerHTML = novaEtiqueta.innerHTML;
           }
 
         } else {
-          previewDiv.innerHTML = '<p style="text-align: center; font-style: italic; color: #555;">Preencha os campos para ver a etiqueta.</p>';
+          previewDiv.style.width = TAMANHOS_ETIQUETA[tamanhoSelecionado].width;
+          previewDiv.style.height = TAMANHOS_ETIQUETA[tamanhoSelecionado].height;
+          previewDiv.innerHTML = '<p style="text-align: center; font-style: italic; color: #555; padding: 20px;">Preencha os campos para ver a etiqueta.</p>';
         }
       }
 
@@ -482,7 +530,7 @@
 
       function limparEtiquetas() {
         if (confirm("Tem certeza que deseja limpar a lista de etiquetas?")) {
-          document.getElementById('etiquetas-output').innerHTML = '<p>Use o formulário ao lado e clique em "Adicionar Etiqueta" para montar sua lista.</p>';
+          document.getElementById('etiquetas-output').innerHTML = '<p>Use o formulário para montar sua lista.</p>';
         }
       }
 
