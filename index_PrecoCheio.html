@@ -95,23 +95,20 @@
       /* ==================== ESTILO DA ETIQUETA DE OFERTA ==================== */
       
       .etiqueta {
-        --fator-escala: 1; /* Padrão, será sobrescrito pelo JS */
-        
-        border: 1px solid #ccc;
-        display: inline-block;
-        box-sizing: border-box;
-        page-break-inside: avoid;
-        background-color: #fff;
-        /* Habilita o Flexbox para posicionar o conteúdo e a logo */
-        display: flex; 
-        flex-direction: column;
-        /* CORREÇÃO: Alinha conteúdo ao topo e empurra a logo para o fundo */
-        justify-content: space-between; 
-        position: relative;
-        overflow: hidden;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-        transition: width 0.3s ease, height 0.3s ease; 
-      }
+    --fator-escala: 1; 
+    border: 1px solid #ccc;
+    display: inline-block;
+    box-sizing: border-box;
+    page-break-inside: avoid;
+    background-color: #fff;
+    display: flex; 
+    flex-direction: column;
+    /* REMOVIDO: justify-content: space-between; */ /* <-- Remova esta linha */
+    position: relative; /* Importante para que a logo absoluta se posicione em relação a ela */
+    overflow: hidden;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: width 0.3s ease, height 0.3s ease; 
+}
       
       /* CONTAINER INTERNO: Ocupa o espaço necessário, sem crescer */
       .etiqueta-conteudo {
@@ -125,7 +122,7 @@
           justify-content: flex-start; 
           position: relative;
           /* Adiciona uma margem inferior para dar espaço à logo (opcional, pode ser removido) */
-          margin-bottom: 5pt; 
+          margin-bottom: 8pt; 
       }
 
       #preview-etiqueta {
@@ -152,38 +149,53 @@
 
       .nome-produto {
         font-size: calc(20pt * var(--fator-escala)); 
-        font-weight: 900;
+        font-weight: 600;
         text-transform: uppercase;
         line-height: 1.1;
         color: #000;
         margin-top: calc(15pt * var(--fator-escala));
       }
 
-      .descricao-produto, .marca-produto {
-        font-size: calc(16pt * var(--fator-escala)); 
-        font-weight: 600;
-        line-height: 1.2;
-        text-transform: uppercase;
-        margin-top: calc(5pt * var(--fator-escala));
-      }
+      .marca-produto {
+            /* Removido o seletor .descricao-produto daqui */
+            font-size: calc(16pt * var(--fator-escala)); 
+            font-weight: 600;
+            line-height: 1.2;
+            text-transform: uppercase;
+            margin-top: calc(5pt * var(--fator-escala));
+            /* NOVO: Define a cor da marca como vermelho */
+            color: #ff0000; 
+        }
 
+        /* NOVO BLOCO: Crie uma regra específica para a descrição */
+        .descricao-produto {
+            font-size: calc(16pt * var(--fator-escala)); 
+            font-weight: 600;
+            line-height: 1.2;
+            text-transform: uppercase;
+            margin-top: calc(5pt * var(--fator-escala));
+            /* NOVO: Define a cor da descrição como preto */
+            color: #000; 
+        }
       .peso-produto {
         position: absolute;
-        top: calc(5mm * var(--fator-escala)); 
-        right: calc(5mm * var(--fator-escala));
-        font-size: calc(14pt * var(--fator-escala)); 
+        top: calc(25mm * var(--fator-escala)); 
+        right: calc(7mm * var(--fator-escala));
+        font-size: calc(12pt * var(--fator-escala)); 
         font-weight: 700;
         color: #333;
         z-index: 10;
-      }
-
+        /* NOVA ALTERAÇÃO: Inclinar o elemento levemente */
+        transform: rotate(-10deg); /* Gira 5 graus para a esquerda. Use 5deg para a direita. */
+    }
+    
       .preco-e-unidade {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-top: calc(20pt * var(--fator-escala)); 
+        margin-top: calc(8pt * var(--fator-escala)); 
         margin-bottom: calc(5pt * var(--fator-escala));
       }
 
@@ -228,13 +240,21 @@
       }
 
       .logo-empresa {
+        /* Mantenha estas propriedades de largura e altura escalonáveis */
         width: calc(120pt * var(--fator-escala)); 
-        height: auto;
-        /* Alinha a logo no centro horizontal e a mantém no bottom graças ao justify-content: space-between no .etiqueta */
-        margin-bottom: 5pt; 
-        display: block;
-        align-self: center;
-      }
+        height: auto; 
+
+    /* Remova as propriedades de fluxo flex e margem do fluxo */
+    /* REMOVIDO: margin-bottom: 5pt; */
+    /* REMOVIDO: display: block; */
+    /* REMOVIDO: align-self: center; */
+
+    /* NOVA LÓGICA DE POSICIONAMENTO ABSOLUTO */
+        position: absolute; /* Torna a logo posicionada absolutamente */
+        bottom: calc(4mm * var(--fator-escala)); /* Ajuste este valor para mover para cima/baixo */
+        left: 50%; /* Centraliza horizontalmente */
+        transform: translateX(-50%); /* Ajusta a centralização pelo próprio tamanho da logo */
+    }
 
       .logo-empresa svg {
         width: calc(120pt * var(--fator-escala)); /* Largura escalonável */
