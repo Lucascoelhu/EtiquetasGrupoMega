@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modelo de Oferta (Preço Único 5,99)</title>
     <style>
+        /* IMPORT DAS FONTES GOOGLE */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700;900&display=swap');
         /* Variáveis CSS para Dimensões e Posições (Padrão A4) */
         :root {
             --width: 210mm;
@@ -137,6 +139,7 @@
             justify-content: center;
             line-height: 1;
             margin-top: 1em;
+            transform: scaleX(0.8);
         }
 
         /* Valor Inteiro */
@@ -148,7 +151,9 @@
             top: var(--real-top);
             height: 1em;
             min-width: 1.5em;
-            margin-left: -1em;
+            margin-left: -0.8em;
+            transform: scaleX(1.2); /* aumenta a largura em 50% */
+            display: inline-block;
         }
         
         /* Centavos */
@@ -162,6 +167,7 @@
             line-height: 0.3;
             min-width: 1.5em;
             margin-right: -1em;
+            letter-spacing: 0.05em;
         }
 
         /* Texto CADA */
