@@ -26,7 +26,7 @@
             text-align: center;
             background-color: #f0f0f0;
             margin: 0;
-            padding: 0; /* CORRIGIDO: Removido o padding de 20px que causava a segunda página */
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -51,7 +51,6 @@
         @media print {
             .controls { display: none; }
             .page-container { box-shadow: none; }
-            /* Garante que os fundos e cores sejam impressos (se o navegador permitir) */
             * {
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
@@ -76,7 +75,6 @@
             overflow: hidden;
         }
         
-        /* Otimização A4-A7 */
         @page { size: var(--width) var(--height); margin: 0; }
 
         /* Estilos dos Textos (cores e fontes) */
@@ -84,7 +82,6 @@
         .text-black { color: black; }
         .font-impact { font-family: Impact, 'Arial Black', sans-serif; }
 
-        /* Estilo de Edição */
         [contenteditable]:focus {
             outline: 1px dashed #000;
             cursor: text;
@@ -93,16 +90,21 @@
              [contenteditable]:focus { outline: none; }
         }
 
-        /* Classe para Caixa Invisível Centralizada */
         .editable-box {
             display: inline-block;
             text-align: center;
         }
         
-        /* Layout e Estilos Visuais */
-        .offer-title { font-size: 6em; font-weight: 900; margin-top: 0.5em; margin-bottom: 0.8em; letter-spacing: -1px; }
+        /* Título OFERTA */
+        .offer-title { 
+            font-size: 6em; 
+            font-weight: 900; 
+            margin-top: 0.5em; 
+            margin-bottom: 0.8em; 
+            letter-spacing: -1px; 
+        }
 
-        /* Peso (Usa as Variáveis de Posição) */
+        /* Peso */
         .weight-box { 
             position: absolute; 
             top: var(--weight-top); 
@@ -113,37 +115,33 @@
             min-width: 80px;
         }
         
-        /* Descrições */
+        /* Descrições e Marca */
         .description { 
             font-size: 2.1em; 
             font-weight: 900; 
             line-height: 1.1; 
             margin-bottom: 0.2em; 
+            text-transform: uppercase; /* Sempre em maiúsculas */
         }
         .pullman { 
             font-size: 2.1em; 
             font-weight: 900; 
             margin-bottom: 0.8em; 
+            text-transform: uppercase; /* Sempre em maiúsculas */
         }
 
-        /* Container do preço principal */
+        /* Container do preço */
         .price-line-single {
             display: flex;
             align-items: flex-start;
             justify-content: center;
             line-height: 1;
             margin-top: 1em;
-            /* Note: A variável --price-offset-left foi removida pois não estava presente no seu código enviado. */
-        }
-        
-        /* Símbolo Monetário (invisível neste modelo, mas mantido por flexibilidade) */
-        .currency-symbol-single {
-            /* Removida, mas mantida no HTML por flexibilidade futura */
         }
 
-        /* Valor Inteiro (5) */
+        /* Valor Inteiro */
         .price-real-single {
-            font-size: 22em; /* Aumentado para dominar a página */
+            font-size: 22em;
             margin: 0;
             padding: 11;
             position: relative;
@@ -153,29 +151,30 @@
             margin-left: -1em;
         }
         
-        /* Centavos (,99) */
+        /* Centavos */
         .price-centavos-single {
-            font-size: 12em; /* Tamanho ajustado para centavos */
+            font-size: 12em;
             font-weight: 900;
             position: relative;
-            top: var(--centavos-top); /* Usa a variável ajustada */
-            margin-left: var(--centavos-margin-left); /* Usa a variável ajustada */
+            top: var(--centavos-top);
+            margin-left: var(--centavos-margin-left);
             padding: 0;
             line-height: 0.3;
             min-width: 1.5em;
             margin-right: -1em;
         }
 
-        /* Texto CADA/KG/Unidade */
+        /* Texto CADA */
         .text-cada {
             font-size: var(--text-cada-font-size);
             font-weight: 900;
             color: black;
             margin-top: -1em;
-            margin-bottom: 18em; /* Espaço antes do logo */
+            margin-bottom: 18em;
             margin-right: -6.2em;
         }
 
+        /* Logo */
         .logo-box {
             position: absolute;
             bottom: 5%;
@@ -212,33 +211,24 @@
     <div class="pullman color-red" contenteditable="true">PULLMAN</div>
 
     <div class="price-line-single">
-        
-        <!-- Símbolo Monetário R$ (Apenas o texto) -->
-        
         <div class="price-group-single color-red font-impact">
             <span class="price-real-single editable-box" contenteditable="true">5</span>
             <span class="price-centavos-single editable-box" contenteditable="true">,99</span>
         </div>
     </div>
 
-    <!-- Texto "CADA" -->
     <div class="text-cada text-black" contenteditable="true">CADA</div>
 
-
-    <div class="logo-box" contenteditable="true">
-        GRUPO MEGA
-    </div>
+    <div class="logo-box" contenteditable="true">GRUPO MEGA</div>
 </div>
 
 <script>
     const root = document.documentElement;
     const rootStyles = root.style;
 
-    // Configurações de escala para cada formato
     const sizes = {
         'A4': { 
             width: '210mm', height: '297mm', base_font: '16px',
-            // Ajustes de Posicionamento A4
             '--weight-top': '15%', '--weight-right': '5%', '--weight-rotate': '-18deg',
             '--real-top': '0',
             '--centavos-top': '-0.6em', 
@@ -247,16 +237,14 @@
         },
         'A5': { 
             width: '148mm', height: '210mm', base_font: '12px',
-            // Ajustes de Posicionamento A5
             '--weight-top': '18%', '--weight-right': '3%', '--weight-rotate': '-15deg',
             '--real-top': '0',
             '--centavos-top': '-0.6em', 
             '--centavos-margin-left': '-60px', 
-            '--text-cada-font-size': '2.8em',
+            '--text-cada-font-size': '2.8em'
         },
         'A6': { 
             width: '105mm', height: '148mm', base_font: '9px',
-            // Ajustes de Posicionamento A6
             '--weight-top': '18%', '--weight-right': '2%', '--weight-rotate': '-12deg',
             '--real-top': '0',
             '--centavos-top': '-0.6em', 
@@ -265,7 +253,6 @@
         },
         'A7': { 
             width: '74mm', height: '105mm', base_font: '7px',
-            // Ajustes de Posicionamento A7
             '--weight-top': '19%', '--weight-right': '1%', '--weight-rotate': '-10deg',
             '--real-top': '0',
             '--centavos-top': '-0.6em', 
@@ -277,12 +264,10 @@
     function resizeOffer(sizeKey) {
         const size = sizes[sizeKey];
         if (size) {
-            // 1. Aplica as dimensões principais
             rootStyles.setProperty('--width', size.width);
             rootStyles.setProperty('--height', size.height);
             rootStyles.setProperty('--main-font-size', size.base_font);
 
-            // 2. Aplica os ajustes finos de posicionamento para o formato
             rootStyles.setProperty('--weight-top', size['--weight-top']);
             rootStyles.setProperty('--weight-right', size['--weight-right']);
             rootStyles.setProperty('--weight-rotate', size['--weight-rotate']);
@@ -293,7 +278,6 @@
         }
     }
 
-    // Inicializa o tamanho padrão
     resizeOffer('A4');
 </script>
 
