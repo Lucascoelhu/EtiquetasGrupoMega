@@ -10,13 +10,13 @@
             --width: 210mm;
             --height: 297mm;
             /* Variáveis de ajuste que serão alteradas via JS */
-            --weight-top: 16%;
+            --weight-top: 15%;
             --weight-right: 5%;
             --weight-rotate: -18deg;
             /* Ajustes finos para este modelo */
             --real-top: 0; /* Posição vertical do valor inteiro */
             --centavos-top: -0.4em; /* Move os centavos mais para cima */
-            --centavos-margin-left: -85px; /* AJUSTADO: Sobrepõe mais os centavos (move para a esquerda) */
+            --centavos-margin-left: -85px; /* Sobrepõe mais os centavos (move para a esquerda) */
             --text-cada-font-size: 3.5em; /* Tamanho da fonte do texto "CADA" */
             --main-font-size: 16px;
         }
@@ -26,7 +26,7 @@
             text-align: center;
             background-color: #f0f0f0;
             margin: 0;
-            padding: 20px;
+            padding: 0; /* CORRIGIDO: Removido o padding de 20px que causava a segunda página */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -133,8 +133,13 @@
             justify-content: center;
             line-height: 1;
             margin-top: 1em;
+            /* Note: A variável --price-offset-left foi removida pois não estava presente no seu código enviado. */
         }
         
+        /* Símbolo Monetário (invisível neste modelo, mas mantido por flexibilidade) */
+        .currency-symbol-single {
+            /* Removida, mas mantida no HTML por flexibilidade futura */
+        }
 
         /* Valor Inteiro (5) */
         .price-real-single {
@@ -234,10 +239,10 @@
         'A4': { 
             width: '210mm', height: '297mm', base_font: '16px',
             // Ajustes de Posicionamento A4
-            '--weight-top': '20%', '--weight-right': '8%', '--weight-rotate': '-18deg',
+            '--weight-top': '15%', '--weight-right': '5%', '--weight-rotate': '-18deg',
             '--real-top': '0',
             '--centavos-top': '-0.6em', 
-            '--centavos-margin-left': '-85px', /* AUMENTADO para mover para a esquerda */
+            '--centavos-margin-left': '-85px', 
             '--text-cada-font-size': '3.5em'
         },
         'A5': { 
@@ -246,8 +251,8 @@
             '--weight-top': '18%', '--weight-right': '3%', '--weight-rotate': '-15deg',
             '--real-top': '0',
             '--centavos-top': '-0.6em', 
-            '--centavos-margin-left': '-60px', /* AUMENTADO para mover para a esquerda */
-            '--text-cada-font-size': '2.5em',
+            '--centavos-margin-left': '-60px', 
+            '--text-cada-font-size': '2.8em',
         },
         'A6': { 
             width: '105mm', height: '148mm', base_font: '9px',
@@ -255,16 +260,16 @@
             '--weight-top': '18%', '--weight-right': '2%', '--weight-rotate': '-12deg',
             '--real-top': '0',
             '--centavos-top': '-0.6em', 
-            '--centavos-margin-left': '-45px', /* AUMENTADO para mover para a esquerda */
+            '--centavos-margin-left': '-45px', 
             '--text-cada-font-size': '2.2em'
         },
         'A7': { 
             width: '74mm', height: '105mm', base_font: '7px',
             // Ajustes de Posicionamento A7
-            '--weight-top': '28%', '--weight-right': '1%', '--weight-rotate': '-10deg',
+            '--weight-top': '19%', '--weight-right': '1%', '--weight-rotate': '-10deg',
             '--real-top': '0',
             '--centavos-top': '-0.6em', 
-            '--centavos-margin-left': '-35px', /* AUMENTADO para mover para a esquerda */
+            '--centavos-margin-left': '-35px', 
             '--text-cada-font-size': '1.8em'
         }
     };
