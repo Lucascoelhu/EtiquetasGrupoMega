@@ -216,7 +216,7 @@
       }
       .peso-produto {
         position: absolute;
-        top: calc(25mm * var(--fator-escala)); 
+        top: calc(30mm * var(--fator-escala)); 
         right: calc(7mm * var(--fator-escala));
         font-size: calc(12pt * var(--fator-escala)); 
         font-weight: 700;
@@ -237,13 +237,11 @@
 
       /* --- CORREÇÃO DE ESCALA PARA O PREÇO: Usando o fator de tela (maior no A4) --- */
       .valor-principal {
-        /* NOTA: Removemos a dependência do fator-escala-preco no CSS base para usar apenas o fator-escala, 
-                 e deixamos os ajustes fixos para o @media print. */
         font-size: calc(150pt * var(--fator-escala)) !important; 
         color: var(--cor-oferta);
         font-weight: 900;
         line-height: 0.95;
-        letter-spacing: calc(10pt * var(--fator-escala)); 
+        letter-spacing: calc(18pt * var(--fator-escala)); 
         font-family: 'Bebas Neue', sans-serif;
         display: inline-block;
         text-align: right;
@@ -256,7 +254,7 @@
         letter-spacing: calc(2pt * var(--fator-escala)); 
         vertical-align: super;
         font-weight: 700;
-        margin-left: calc(-8pt * var(--fator-escala)); 
+        margin-left: calc(-1pt * var(--fator-escala)); 
         font-family: 'Bebas Neue', sans-serif;
         position: relative;
         top: calc(20pt * var(--fator-escala)); 
@@ -272,8 +270,8 @@
         margin-right: 0;
         position: absolute;
         
-        top: 90%;
-        left: 65%;
+        top: 99%;
+        left: 50%;
         transform: translateX(-50%);
       }
 
@@ -356,7 +354,7 @@
 
           /* --- AJUSTES ESPECÍFICOS PARA A ETIQUETA A4 (190mm) --- */
           .etiqueta[style*="--etiqueta-largura: 190mm"] .etiqueta-conteudo {
-            padding-top: 30mm !important; /* Mais espaço no topo */
+            padding-top: 15mm !important; /* Mais espaço no topo */
             margin-bottom: 0 !important; /* Remove margem extra */
           }
           
@@ -380,7 +378,7 @@
           
           .etiqueta[style*="--etiqueta-largura: 190mm"] .peso-produto {
               font-size: 20pt !important; /* Aumenta peso */
-              top: 40mm !important; 
+              top: 60mm !important; 
               right: 15mm !important;
           }
           
@@ -388,7 +386,7 @@
           .etiqueta[style*="--etiqueta-largura: 190mm"] .valor-principal {
               font-size: 300pt !important; /* Corrigido: Tamanho fixo e gigante */
               line-height: 1 !important;
-              letter-spacing: 5pt !important;
+              letter-spacing: 7pt !important;
               margin-top: 20pt !important; 
           }
           
@@ -401,14 +399,14 @@
           /* CORREÇÃO FINAL DO "CADA" NO A4 */
           .etiqueta[style*="--etiqueta-largura: 190mm"] .info-adicional {
               font-size: 30pt !important;
-              top: 85% !important; 
-              left: 55% !important; /* MUDANÇA AQUI: mais para a esquerda */
+              top: 98% !important; 
+              left: 42% !important; /* MUDANÇA AQUI: mais para a esquerda */
               transform: none !important;
           }
 
           .etiqueta[style*="--etiqueta-largura: 190mm"] .logo-empresa {
               width: 150pt !important; 
-              bottom: 15mm !important; 
+              bottom: 10mm !important; 
               
           }
           .etiqueta[style*="--etiqueta-largura: 190mm"] .logo-empresa svg {
@@ -428,7 +426,7 @@
         <h2>Adicionar Produto</h2>
         <label for="tamanhoEtiqueta">Tamanho da Etiqueta:</label>
         <select id="tamanhoEtiqueta" onchange="atualizarPreview()">
-          	<option value="A4">A4 (190mm x 277mm) - Folha Cheia</option> 
+            <option value="A4">A4 (190mm x 277mm) - Folha Cheia</option> 
           <option value="A5">A5 (148mm x 210mm) - Média</option>
           <option value="A6" selected>A6 (105mm x 148mm) - Pequena (Base)</option>
           <option value="Custom">Customizado (74mm x 105mm)</option>
