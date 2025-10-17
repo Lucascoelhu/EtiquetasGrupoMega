@@ -243,9 +243,10 @@
 
     <div class="weight-box text-black editable-box" contenteditable="true">480G</div>
 
-    <div class="description text-black" contenteditable="true">PÃO DE FORMA</div>
-    <div class="description text-black" contenteditable="true">TRADICIONAL</div>
-    <div class="pullman color-red" contenteditable="true">PULLMAN</div>
+    <!-- Descrições e Marca com a nova classe 'uppercase-on-blur' -->
+    <div class="description text-black uppercase-on-blur" contenteditable="true">PÃO DE FORMA</div>
+    <div class="description text-black uppercase-on-blur" contenteditable="true">TRADICIONAL</div>
+    <div class="pullman color-red uppercase-on-blur" contenteditable="true">PULLMAN</div>
 
     <div class="price-line">
         <span class="qty-value color-red font-impact editable-box" contenteditable="true">1</span>
@@ -333,9 +334,27 @@
         }
     }
 
-    // Inicializa o tamanho padrão
+    // Função para converter o texto de um elemento para maiúsculas
+    function toUpperCase(event) {
+        const element = event.target;
+        if (element.textContent) {
+            element.textContent = element.textContent.toUpperCase();
+        }
+    }
+
+    // Inicializa o tamanho padrão e configura os eventos
     document.addEventListener('DOMContentLoaded', () => {
         resizeOffer('A4');
+        
+        // Adiciona o listener 'blur' (quando o foco sai do campo) para a nova classe
+        document.querySelectorAll('.uppercase-on-blur').forEach(element => {
+            element.addEventListener('blur', toUpperCase);
+        });
+
+        // Executa a conversão inicial para garantir que o conteúdo padrão também esteja em MAIÚSCULAS
+        document.querySelectorAll('.uppercase-on-blur').forEach(element => {
+            toUpperCase({ target: element });
+        });
     });
 </script>
 
