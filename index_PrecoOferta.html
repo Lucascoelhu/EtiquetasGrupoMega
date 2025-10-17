@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Configuração de Fontes e Cores */
-        @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700;900&display=swap');
         
         :root {
             /* Variáveis CSS para Dimensões e Posições (Padrão A4) */
@@ -157,10 +157,19 @@
             /* Ajustado para economizar espaço e evitar transbordo */
             margin: -1.2em 0; 
             line-height: 1;
+            
         }
 
         /* Quantidade (1 ou 2) */
-        .qty-value { font-size: 12em; margin-right: 0.1em; min-width: 0.6em; }
+        .qty-value { 
+            font-size: 12em; 
+            margin-right: 0.1em; 
+            min-width: 0.6em; 
+            transform: scaleX(1.1); /* aumenta a largura em 50% */
+            display: inline-block;
+            transform: scaleY(1.3); /* aumenta a altura em 30% */
+            display: inline-block;
+        }
         
         /* Símbolo Monetário (Texto "por") */
         .currency-symbol {
@@ -180,6 +189,11 @@
             padding: 0;
             height: 1em;
             min-width: 1.5em;
+            transform: scaleX(1.1); /* aumenta a largura em 50% */
+            display: inline-block; /* necessário para o transform funcionar */
+            transform: scaleY(1.3); /* aumenta a altura em 30% */
+            display: inline-block;
+            
         }
         
         /* Centavos */
@@ -190,14 +204,17 @@
             top: var(--centavos-top);
             margin-left: var(--centavos-margin-left);
             min-width: 1.5em;
+            transform: scaleY(1.3); /* aumenta a altura em 30% */
+            display: inline-block;
         }
 
         /* Linha Separadora */
         .separator-ou-line { 
             display: flex; 
             align-items: center; 
-            width: 91%; 
-            margin: 2em auto; 
+            width: 99%; 
+            margin: 2em auto;
+            margin-top: 2.6em;
         }
         .separator-ou { 
             font-size: 1.6em; 
@@ -210,7 +227,7 @@
         .line { 
             flex-grow: 1; 
             height: 0; 
-            border-top: 4px solid black; 
+            border-top: 1px solid black; 
         }
         
         .logo-box {
