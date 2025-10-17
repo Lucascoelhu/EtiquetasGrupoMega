@@ -237,11 +237,13 @@
 
       /* --- CORREÇÃO DE ESCALA PARA O PREÇO: Usando o fator de tela (maior no A4) --- */
       .valor-principal {
-        font-size: calc(150pt * var(--fator-escala-preco)) !important; 
+        /* NOTA: Removemos a dependência do fator-escala-preco no CSS base para usar apenas o fator-escala, 
+                 e deixamos os ajustes fixos para o @media print. */
+        font-size: calc(150pt * var(--fator-escala)) !important; 
         color: var(--cor-oferta);
         font-weight: 900;
         line-height: 0.95;
-        letter-spacing: calc(10pt * var(--fator-escala-preco)); 
+        letter-spacing: calc(10pt * var(--fator-escala)); 
         font-family: 'Bebas Neue', sans-serif;
         display: inline-block;
         text-align: right;
@@ -249,15 +251,15 @@
       }
 
       .valor-principal .centavos {
-        font-size: calc(105pt * var(--fator-escala-preco)) !important; 
+        font-size: calc(105pt * var(--fator-escala)) !important; 
         line-height: 0.95;
-        letter-spacing: calc(2pt * var(--fator-escala-preco)); 
+        letter-spacing: calc(2pt * var(--fator-escala)); 
         vertical-align: super;
         font-weight: 700;
-        margin-left: calc(-8pt * var(--fator-escala-preco)); 
+        margin-left: calc(-8pt * var(--fator-escala)); 
         font-family: 'Bebas Neue', sans-serif;
         position: relative;
-        top: calc(20pt * var(--fator-escala-preco)); 
+        top: calc(20pt * var(--fator-escala)); 
       }
       
       .info-adicional {
@@ -338,8 +340,8 @@
               width: var(--etiqueta-largura) !important; 
               height: var(--etiqueta-altura) !important;
               
-              --fator-escala: 1 !important; 
-              --fator-escala-preco: 1 !important;
+              --fator-escala: 1 !important; /* FORÇA ESCALA 1:1 NO PRINT */
+              --fator-escala-preco: 1 !important; /* FORÇA ESCALA 1:1 NO PRINT */
               
               border: 1px dashed #ccc; 
               margin: 0 !important;
@@ -384,14 +386,14 @@
           
           /* SOLUÇÃO FINAL PARA O PREÇO: FORÇAR O TAMANHO GIGANTE NO A4 */
           .etiqueta[style*="--etiqueta-largura: 190mm"] .valor-principal {
-              font-size: 300pt !important;
+              font-size: 300pt !important; /* Corrigido: Tamanho fixo e gigante */
               line-height: 1 !important;
               letter-spacing: 5pt !important;
               margin-top: 20pt !important; 
           }
           
           .etiqueta[style*="--etiqueta-largura: 190mm"] .valor-principal .centavos {
-              font-size: 200pt !important;
+              font-size: 200pt !important; /* Corrigido: Tamanho fixo e gigante */
               top: 40pt !important; 
               margin-left: -10pt !important; 
           }
@@ -434,13 +436,13 @@
         
         <form id="formEtiqueta" oninput="atualizarPreview()"> 
           <label for="produto">Produto:</label>
-          <input type="text" id="produto" placeholder="Ex: Pão de Forma" required>
+          <input type="text" id="produto" placeholder="Ex: Pão de Forma" required value="Bisnaguinha">
           <label for="descricao">Descrição:</label>
-          <input type="text" id="descricao" placeholder="Ex: Integral 12 Grãos">
+          <input type="text" id="descricao" placeholder="Ex: Integral 12 Grãos" value="INTEIRAL">
           <label for="marca">Marca:</label>
-          <input type="text" id="marca" placeholder="Ex: Pullman">
+          <input type="text" id="marca" placeholder="Ex: Pullman" value="BAUDUCCO">
           <label for="precoCheio">Preço (R$):</label>
-          <input type="number" id="precoCheio" step="0.01" placeholder="Ex: 5.99" required>
+          <input type="number" id="precoCheio" step="0.01" placeholder="Ex: 5.99" required value="6.50">
           <label for="unidade">Unidade (CADA, KG, LT...):</label>
           <input type="text" id="unidade" value="CADA" placeholder="Ex: CADA, KG, LT" required>
           <label for="peso">Peso/Volume (Opcional):</label>
@@ -477,7 +479,7 @@
       const MM_TO_PX = 3.7795275591; // Conversão aproximada: 1mm = 3.7795275591px @ 96dpi
 
       const TAMANHOS_ETIQUETA = {
-          'A4': { width: '190mm', height: '277mm', nome: 'A4' }, // Ajustado para preencher a folha
+          'A4': { width: '190mm', height: '277mm', nome: 'A4' }, // Ajustado para preencher a folha A4
           'A5': { width: '148mm', height: '210mm', nome: 'A5' },
           'A6': { width: '105mm', height: '148mm', nome: 'A6' },
           'Custom': { width: '74mm', height: '105mm', nome: 'Custom' } 
@@ -528,19 +530,20 @@
           const logoSvg = gerarLogoSvg();
           const pesoHtml = peso ? `<div class="peso-produto">${peso}</div>` : '';
           
-          // Cálculo e aplicação do fator de escala
+          // Cálculo e aplicação do fator de escala de DESIGN (baseado em A6=105mm)
           const larguraAtualMM = parseFloat(dimensoes.width.replace('mm', '')); 
           const fatorEscala = (larguraAtualMM / LARGURA_REFERENCIA).toFixed(2); 
 
-          // LÓGICA DE CORREÇÃO: Força um fator de escala maior para o preço no modo A4 para preencher a página na tela
-          const fatorEscalaPreco = (tamanhoEtiqueta === 'A4') ? 1.8 : fatorEscala; 
+          // CORREÇÃO: Usamos o fator de escala de design normal para a pré-visualização.
+          // O ajuste de preço para o A4 será feito SOMENTE no CSS @media print.
+          const fatorEscalaPreco = fatorEscala;
           
           // Adiciona as variáveis CSS com as dimensões e o fator de escala
           const styleVariavel = `
             --etiqueta-largura: ${dimensoes.width}; 
             --etiqueta-altura: ${dimensoes.height};
             --fator-escala: ${fatorEscala}; 
-            --fator-escala-preco: ${fatorEscalaPreco}; 
+            --fator-escala-preco: ${fatorEscalaPreco}; /* Agora igual ao fatorEscala */
             width: ${dimensoes.width};
             height: ${dimensoes.height};
           `;
@@ -608,7 +611,8 @@
           const larguraAtualMM = parseFloat(dimensoes.width.replace('mm', '')); 
           const fatorEscalaReal = (larguraAtualMM / LARGURA_REFERENCIA).toFixed(2); 
 
-          const fatorEscalaPreco = (tamanhoSelecionado === 'A4') ? 1.8 : fatorEscalaReal;
+          // CORREÇÃO: Removemos a lógica de forçar o 1.8 aqui também
+          const fatorEscalaPreco = fatorEscalaReal;
 
           previewDiv.style.cssText = `
             width: ${dimensoes.width}; 
@@ -616,7 +620,7 @@
             --etiqueta-largura: ${dimensoes.width};
             --etiqueta-altura: ${dimensoes.height};
             --fator-escala: ${fatorEscalaReal};
-            --fator-escala-preco: ${fatorEscalaPreco};
+            --fator-escala-preco: ${fatorEscalaPreco}; /* Agora igual ao fatorEscalaReal */
             transform: ${scaleTransform}; 
             transform-origin: top left;
           `;
@@ -668,6 +672,9 @@
           document.getElementById('etiquetas-output').innerHTML = '<p>Use o formulário para montar sua lista.</p>';
         }
       }
+      
+      // Chama a função ao carregar para mostrar o estado inicial
+      document.addEventListener('DOMContentLoaded', atualizarPreview);
 
     </script>
   </body>
