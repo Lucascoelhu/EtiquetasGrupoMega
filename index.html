@@ -4,89 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Principal - Gerador de Etiquetas</title>
-    
+    <!-- Carrega Tailwind CSS CDN para usar classes utilitárias -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carrega a fonte Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
     
+    <!-- Configuração do Tailwind para usar a fonte Poppins -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-blue': '#3f7bbf', // Cor Principal
+                        'bg-light': '#f8f9fb', // Cor de Fundo
+                        'btn-cheio': '#00b894', // Verde/Teal
+                        'btn-oferta': '#e74c3c', // Vermelho
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Estilo para o hover, que é mais fácil de fazer com CSS puro para um efeito de brilho -->
     <style>
-        :root {
-            --cor-principal: #3f7bbf;
-            --cor-fundo: #f8f9fb;
-            --cor-cheio: #00b894;
-            --cor-oferta: #e74c3c;
-            --sombra-suave: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --cor-titulo: #2c3e50;
-            /* Gradiente mais vibrante */
-            --gradiente-btn-cheio: linear-gradient(145deg, #00b894 0%, #00997d 100%); 
-            --gradiente-btn-dupla: linear-gradient(145deg, #e74c3c 0%, #c0392b 100%);
-            --gradiente-principal: linear-gradient(160deg, #3f7bbf, #6aace8);
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--cor-fundo);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .menu-container {
-            background: #ffffff;
-            padding: 40px; /* Aumentado */
-            border-radius: 25px; /* Arredondado */
-            box-shadow: var(--sombra-suave);
-            text-align: center;
-            max-width: 480px; /* Aumentado */
-            width: 100%;
-            border-top: 5px solid var(--cor-principal); /* Detalhe moderno */
-        }
-
-        .titulo-principal {
-            color: var(--cor-titulo);
-            font-size: 2.4em; /* Aumentado */
-            font-weight: 900;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            line-height: 1.1;
-        }
-        
-        .subtitulo {
-            color: #7f8c8d; /* Cinza suave */
-            margin-bottom: 40px; /* Mais espaço */
-            font-size: 1.1em;
-            font-weight: 400;
-        }
-
-        .opcoes {
-            display: flex;
-            flex-direction: column;
-            gap: 20px; /* Aumentado */
-        }
-
-        .opcao-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* Alinha o ícone à esquerda e o texto ao centro */
-            min-height: 70px; /* Aumentado */
-            padding: 15px 30px; 
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Sombra mais forte */
-            text-align: left;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Efeito de brilho ao passar o mouse */
-        .opcao-btn::after {
+        .shine-effect::after {
             content: '';
             position: absolute;
             top: 0;
@@ -94,99 +38,65 @@
             width: 100%;
             height: 100%;
             background: rgba(255, 255, 255, 0.1);
-            transition: transform 0.5s;
+            transition: transform 0.5s ease;
             transform: scaleX(0);
             transform-origin: left;
-            z-index: 1;
+            z-index: 10; /* Garante que o efeito fique acima do fundo, mas abaixo do texto */
         }
-
-        .opcao-btn:hover::after {
+        .shine-effect:hover::after {
             transform: scaleX(1);
-        }
-        
-        /* Estilos específicos para cada botão */
-        .opcao-btn.cheio {
-            background: var(--gradiente-btn-cheio);
-            color: white;
-        }
-        
-        .opcao-btn.oferta {
-            background: var(--gradiente-btn-dupla);
-            color: white;
-        }
-
-        .opcao-btn:hover {
-            transform: translateY(-5px); /* Efeito 3D mais pronunciado */
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
-        }
-
-        /* Estilo do Texto do Botão */
-        .opcao-texto {
-            flex-grow: 1;
-            text-align: center;
-            z-index: 2;
-        }
-
-        /* Estilo do Ícone (Simulado) */
-        .opcao-icone {
-            font-size: 1.8em;
-            font-weight: 900;
-            opacity: 0.8;
-            z-index: 2;
-        }
-
-        .atribuicao {
-            margin-top: 40px; /* Mais espaço */
-            font-size: 0.85em;
-            color: #95a5a6;
-            font-weight: 400;
-        }
-
-        @media (max-width: 480px) {
-            .menu-container {
-                padding: 30px 20px;
-            }
-            .titulo-principal {
-                font-size: 2em;
-            }
-            .subtitulo {
-                font-size: 1em;
-            }
-            .opcao-btn {
-                font-size: 1em;
-                min-height: 60px;
-                padding: 10px 20px;
-            }
-            .opcao-icone {
-                font-size: 1.5em;
-            }
         }
     </style>
 </head>
-<body>
+<body class="bg-bg-light font-sans flex items-center justify-center min-h-screen p-4">
 
-    <div class="menu-container">
-        <div class="titulo-principal">
+    <!-- Container Principal do Menu -->
+    <div class="menu-container bg-white p-8 md:p-12 rounded-3xl shadow-2xl text-center max-w-sm w-full border-t-8 border-primary-blue transition duration-500 hover:shadow-primary-blue/30">
+        
+        <!-- Título -->
+        <div class="text-gray-800 text-3xl md:text-4xl font-black mb-1 leading-tight uppercase">
             Gerador de Etiquetas
         </div>
         
-        <div class="subtitulo">
+        <!-- Subtítulo -->
+        <div class="text-gray-500 text-lg mb-8 font-light">
             Grupo Mega - Selecione o Tipo de Etiqueta
         </div>
         
-        <div class="opcoes">
-            <a href="index_PrecoCheio.html" class="opcao-btn cheio">
-                <span class="opcao-icone">R$</span>
-                <span class="opcao-texto">Etiqueta Padrão (R$ X,XX CADA)</span>
+        <!-- Opções de Botão -->
+        <div class="flex flex-col space-y-5">
+            
+            <!-- Botão: Etiqueta Padrão -->
+            <a href="index_PrecoCheio.html" 
+               class="shine-effect relative overflow-hidden flex items-center justify-between min-h-[70px] px-6 py-4 
+                      rounded-xl cursor-pointer text-white text-lg font-bold shadow-lg transition duration-300 ease-in-out
+                      bg-gradient-to-br from-btn-cheio to-green-700 hover:from-green-400 hover:to-green-800 
+                      hover:translate-y-[-4px] hover:shadow-xl hover:shadow-btn-cheio/50">
+                
+                <!-- Ícone (Moeda) -->
+                <span class="text-3xl opacity-90 z-20">R$</span>
+                
+                <!-- Texto Central -->
+                <span class="flex-grow text-center z-20">Etiqueta Padrão (R$ X,XX CADA)</span>
             </a>
             
-            <a href="index_PrecoOferta.html" class="opcao-btn oferta">
-                <span class="opcao-icone">X/Y</span>
-                <span class="opcao-texto">Etiqueta Dupla (Oferta X por Y)</span>
+            <!-- Botão: Etiqueta Dupla/Oferta -->
+            <a href="index_PrecoOferta.html" 
+               class="shine-effect relative overflow-hidden flex items-center justify-between min-h-[70px] px-6 py-4 
+                      rounded-xl cursor-pointer text-white text-lg font-bold shadow-lg transition duration-300 ease-in-out
+                      bg-gradient-to-br from-btn-oferta to-red-700 hover:from-red-400 hover:to-red-800 
+                      hover:translate-y-[-4px] hover:shadow-xl hover:shadow-btn-oferta/50">
+                
+                <!-- Ícone (Divisão) -->
+                <span class="text-3xl opacity-90 z-20">X/Y</span>
+                
+                <!-- Texto Central -->
+                <span class="flex-grow text-center z-20">Etiqueta Dupla (Oferta X por Y)</span>
             </a>
         </div>
 
-        <div class="atribuicao">
+        <!-- Atribuição/Rodapé -->
+        <div class="text-sm text-gray-400 mt-10 font-normal">
             Por: Lucas Coelho, 2025
         </div>
     </div>
