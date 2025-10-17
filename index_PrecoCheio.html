@@ -1,679 +1,296 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Etiquetas de Oferta Responsivo</title>
+    <title>Modelo de Oferta (Preço Único 5,99)</title>
     <style>
-      /* ==================== IMPORT DE FONTES ==================== */
-      @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700;900&display=swap');
+        /* Variáveis CSS para Dimensões e Posições (Padrão A4) */
+        :root {
+            --width: 210mm;
+            --height: 297mm;
+            /* Variáveis de ajuste que serão alteradas via JS */
+            --weight-top: 16%;
+            --weight-right: 5%;
+            --weight-rotate: -18deg;
+            /* Ajustes finos para este modelo */
+            --real-top: 0; /* Posição vertical do valor inteiro */
+            --centavos-top: -0.4em; /* Move os centavos mais para cima */
+            --centavos-margin-left: -85px; /* AJUSTADO: Sobrepõe mais os centavos (move para a esquerda) */
+            --text-cada-font-size: 3.5em; /* Tamanho da fonte do texto "CADA" */
+            --main-font-size: 16px;
+        }
 
-      /* ==================== ESTILOS GERAIS E FORMULÁRIO (MOBILE-FIRST) ==================== */
-      
-      :root {
-          --cor-primaria: #3f7bbf;
-          --cor-sucesso: #4CAF50;
-          --cor-fundo: #f4f4f4;
-          --cor-oferta: #ff0000;
-          --cor-sombra: rgba(0, 0, 0, 0.1);
-      }
+        body {
+            font-family: 'Arial Black', Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-      body {
-        font-family: 'Poppins', sans-serif;
-        background-color: var(--cor-fundo);
-        padding: 15px;
-        margin: 0;
-      }
+        /* Controles (Ocultados na impressão) */
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .controls button {
+            background-color: #d90000;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        @media print {
+            .controls { display: none; }
+            .page-container { box-shadow: none; }
+            /* Garante que os fundos e cores sejam impressos (se o navegador permitir) */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+        }
 
-      .container-principal {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
-
-      .formulario, .container-etiquetas-impressao {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px var(--cor-sombra);
-      }
-      
-      .formulario {
-          width: 100%;
-          position: relative; 
-          top: auto;
-      }
-
-      .formulario label {
-        display: block;
-        margin-top: 10px;
-        font-weight: 600;
-        font-size: 0.95em;
-      }
-
-      .formulario input[type="text"],
-      .formulario input[type="number"],
-      .formulario select {
-        width: 100%;
-        padding: 10px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-top: 5px;
-      }
-
-      .botoes-acao {
-        display: flex;
-        gap: 10px;
-        margin-top: 20px;
-      }
-
-      .botoes-acao button {
-        flex-grow: 1;
-        padding: 12px 15px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 700;
-        transition: background-color 0.2s;
-      }
-
-      #btnAddEtiqueta {
-        background-color: var(--cor-sucesso);
-        color: white;
-      }
-
-      #btnPrint,
-      #btnLimpar {
-        background-color: var(--cor-primaria);
-        color: white;
-      }
-
-      /* Área de visualização das etiquetas */
-      .container-etiquetas-impressao {
-        flex-grow: 1;
-        min-height: 200px;
-      }
-      
-      #preview-etiqueta-wrapper {
-          overflow-x: auto; 
-          margin-bottom: 20px;
-          padding: 5px 0;
-          border-bottom: 1px solid #eee;
-      }
-
-      #preview-etiqueta {
-        border: 2px solid #ff9800;
-        box-shadow: 0 0 15px rgba(255, 152, 0, 0.5);
-        display: inline-block;
-      }
-      
-      #etiquetas-output {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 20px;
-        justify-content: center;
-      }
-
-      /* ==================== DESKTOP/TABLET VIEW (>= 768px) ==================== */
-      @media (min-width: 768px) {
-          body {
-              padding: 20px;
-          }
-          .container-principal {
-              flex-direction: row;
-              align-items: flex-start;
-          }
-          .formulario {
-              width: 300px;
-              position: sticky;
-              top: 20px;
-          }
-          .container-etiquetas-impressao {
-              min-height: 400px;
-          }
-          #preview-etiqueta-wrapper {
-              overflow-x: visible; 
-              padding: 0;
-              border-bottom: none;
-          }
-          #etiquetas-output {
-              justify-content: flex-start;
-          }
-      }
-
-      /* ==================== ESTILO DA ETIQUETA DE OFERTA ==================== */
-      .etiqueta {
-        /* Váriaveis para as dimensões exatas de impressão */
-        border: 1px solid #ccc;
-        display: inline-block;
-        box-sizing: border-box;
-        page-break-inside: avoid;
-        background-color: #fff;
-        display: flex; 
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 2px 2px 5px var(--cor-sombra);
-        transition: width 0.3s ease, height 0.3s ease; 
-      }
-      
-      .etiqueta-conteudo {
-          width: 100%;
-          box-sizing: border-box; 
-          padding: calc(10mm * var(--fator-escala)); 
-          display: flex; 
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-start; 
-          position: relative;
-          margin-bottom: calc(8pt * var(--fator-escala)); 
-      }
-
-      /* Estilos Internos - USANDO CALC() E VAR(--FATOR-ESCALA) */
-      .oferta-tag {
-        font-size: calc(38pt * var(--fator-escala)); 
-        color: var(--cor-oferta);
-        font-weight: 900;
-        text-transform: uppercase;
-        margin-bottom: calc(5pt * var(--fator-escala));
-      }
-
-      .info-produto-container {
-        width: 100%;
-        text-align: center;
-        margin-bottom: calc(4pt * var(--fator-escala));
-        color: var(--cor-oferta);
-      }
-
-      .nome-produto {
-        font-size: calc(20pt * var(--fator-escala)); 
-        font-weight: 600;
-        text-transform: uppercase;
-        line-height: 1.1;
-        color: #000;
-        margin-top: calc(15pt * var(--fator-escala));
-      }
-
-      .marca-produto {
-          font-size: calc(16pt * var(--fator-escala)); 
-          font-weight: 600;
-          line-height: 1.2;
-          text-transform: uppercase;
-          margin-top: calc(5pt * var(--fator-escala));
-          color: var(--cor-oferta); 
-      }
-
-      .descricao-produto {
-          font-size: calc(16pt * var(--fator-escala)); 
-          font-weight: 600;
-          line-height: 1.2;
-          text-transform: uppercase;
-          margin-top: calc(5pt * var(--fator-escala));
-          color: #000; 
-      }
-      .peso-produto {
-        position: absolute;
-        top: calc(30mm * var(--fator-escala)); 
-        right: calc(7mm * var(--fator-escala));
-        font-size: calc(12pt * var(--fator-escala)); 
-        font-weight: 700;
-        color: #333;
-        z-index: 10;
-        transform: rotate(-10deg);
-      }
-      
-      .preco-e-unidade {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: calc(8pt * var(--fator-escala)); 
-        margin-bottom: calc(5pt * var(--fator-escala));
-      }
-
-      /* --- CORREÇÃO DE ESCALA PARA O PREÇO: Usando o fator de tela (maior no A4) --- */
-      .valor-principal {
-        font-size: calc(150pt * var(--fator-escala)) !important; 
-        color: var(--cor-oferta);
-        font-weight: 900;
-        line-height: 0.95;
-        letter-spacing: calc(18pt * var(--fator-escala)); 
-        font-family: 'Bebas Neue', sans-serif;
-        display: inline-block;
-        text-align: right;
-        width: auto;
-      }
-
-      .valor-principal .centavos {
-        font-size: calc(105pt * var(--fator-escala)) !important; 
-        line-height: 0.95;
-        letter-spacing: calc(2pt * var(--fator-escala)); 
-        vertical-align: super;
-        font-weight: 700;
-        margin-left: calc(-1pt * var(--fator-escala)); 
-        font-family: 'Bebas Neue', sans-serif;
-        position: relative;
-        top: calc(20pt * var(--fator-escala)); 
-      }
-      
-      .info-adicional {
-        font-size: calc(16pt * var(--fator-escala)) !important; 
-        color: #333;
-        font-weight: 700;
-        text-transform: uppercase;
-        margin-top: calc(-30pt * var(--fator-escala)); 
-        align-self: center;
-        margin-right: 0;
-        position: absolute;
+        /* Container principal */
+        .page-container {
+            width: var(--width);
+            height: var(--height);
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4% 5%;
+            box-sizing: border-box;
+            position: relative;
+            transition: width 0.3s, height 0.3s;
+            font-size: var(--main-font-size);
+            overflow: hidden;
+        }
         
-        top: 99%;
-        left: 50%;
-        transform: translateX(-50%);
-      }
+        /* Otimização A4-A7 */
+        @page { size: var(--width) var(--height); margin: 0; }
 
-      .logo-empresa {
-        width: calc(120pt * var(--fator-escala)); 
-        height: auto; 
+        /* Estilos dos Textos (cores e fontes) */
+        .color-red { color: #d90000; }
+        .text-black { color: black; }
+        .font-impact { font-family: Impact, 'Arial Black', sans-serif; }
 
-        position: absolute;
-        bottom: calc(4mm * var(--fator-escala));
-        left: 50%;
-        transform: translateX(-50%);
-      }
+        /* Estilo de Edição */
+        [contenteditable]:focus {
+            outline: 1px dashed #000;
+            cursor: text;
+        }
+        @media print {
+             [contenteditable]:focus { outline: none; }
+        }
 
-      .logo-empresa svg {
-        width: calc(120pt * var(--fator-escala));
-        height: auto;
-      }
+        /* Classe para Caixa Invisível Centralizada */
+        .editable-box {
+            display: inline-block;
+            text-align: center;
+        }
+        
+        /* Layout e Estilos Visuais */
+        .offer-title { font-size: 6em; font-weight: 900; margin-top: 0.5em; margin-bottom: 0.8em; letter-spacing: -1px; }
 
-      /* ==================== ESTILOS DE IMPRESSÃO (A4) - SOLUÇÃO FINAL ==================== */
-      @media print {
-          /* 1. Controla as margens da folha (A4) e o tamanho */
-          @page {
-              margin: 0.5cm; /* Margem da folha */
-              size: A4 portrait;
-          }
-          
-          /* Esconder tudo que não é etiqueta */
-          .formulario, button, .container-principal h2, .container-etiquetas-impressao h3, .botoes-acao, #preview-etiqueta-wrapper, hr { 
-            display: none !important;
-          }
+        /* Peso (Usa as Variáveis de Posição) */
+        .weight-box { 
+            position: absolute; 
+            top: var(--weight-top); 
+            right: var(--weight-right); 
+            font-size: 1.4em; 
+            transform: rotate(var(--weight-rotate)); 
+            font-weight: bold;
+            min-width: 80px;
+        }
+        
+        /* Descrições */
+        .description { 
+            font-size: 2.1em; 
+            font-weight: 900; 
+            line-height: 1.1; 
+            margin-bottom: 0.2em; 
+        }
+        .pullman { 
+            font-size: 2.1em; 
+            font-weight: 900; 
+            margin-bottom: 0.8em; 
+        }
 
-          body {
-              margin: 0;
-              padding: 0;
-              background-color: white;
-              display: flex; 
-              justify-content: center;
-              align-items: flex-start; 
-              min-height: 100vh;
-              width: 100vw;
-              overflow: hidden; 
-          }
-          
-          .container-etiquetas-impressao {
-              box-shadow: none !important;
-              padding: 0 !important;
-              margin: 0 !important;
-              width: 100% !important; 
-              min-height: auto !important;
-          }
-          
-          #etiquetas-output {
-              margin: 0 !important;
-              padding: 0 !important;
-              gap: 0 !important;
-              display: flex;
-              flex-wrap: wrap;
-              justify-content: flex-start;
-              width: 100%;
-          }
+        /* Container do preço principal */
+        .price-line-single {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            line-height: 1;
+            margin-top: 1em;
+        }
+        
 
-          /* Aplica o tamanho exato em mm, forçando a escala 1:1 */
-          .etiqueta {
-              width: var(--etiqueta-largura) !important; 
-              height: var(--etiqueta-altura) !important;
-              
-              --fator-escala: 1 !important; /* FORÇA ESCALA 1:1 NO PRINT */
-              --fator-escala-preco: 1 !important; /* FORÇA ESCALA 1:1 NO PRINT */
-              
-              border: 1px dashed #ccc; 
-              margin: 0 !important;
-              float: left !important;
-              box-shadow: none !important;
-              
-              max-width: none !important; 
-              max-height: none !important;
-              
-              page-break-inside: avoid !important;
-          }
+        /* Valor Inteiro (5) */
+        .price-real-single {
+            font-size: 22em; /* Aumentado para dominar a página */
+            margin: 0;
+            padding: 11;
+            position: relative;
+            top: var(--real-top);
+            height: 1em;
+            min-width: 1.5em;
+            margin-left: -1em;
+        }
+        
+        /* Centavos (,99) */
+        .price-centavos-single {
+            font-size: 12em; /* Tamanho ajustado para centavos */
+            font-weight: 900;
+            position: relative;
+            top: var(--centavos-top); /* Usa a variável ajustada */
+            margin-left: var(--centavos-margin-left); /* Usa a variável ajustada */
+            padding: 0;
+            line-height: 0.3;
+            min-width: 1.5em;
+            margin-right: -1em;
+        }
 
-          /* --- AJUSTES ESPECÍFICOS PARA A ETIQUETA A4 (190mm) --- */
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .etiqueta-conteudo {
-            padding-top: 15mm !important; /* Mais espaço no topo */
-            margin-bottom: 0 !important; /* Remove margem extra */
-          }
-          
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .oferta-tag {
-              font-size: 80pt !important; /* Aumenta "OFERTA" */
-              margin-bottom: 20pt !important;
-          }
+        /* Texto CADA/KG/Unidade */
+        .text-cada {
+            font-size: var(--text-cada-font-size);
+            font-weight: 900;
+            color: black;
+            margin-top: -1em;
+            margin-bottom: 18em; /* Espaço antes do logo */
+            margin-right: -6.2em;
+        }
 
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .nome-produto {
-              font-size: 40pt !important; /* Aumenta nome do produto */
-              margin-top: 10pt !important;
-              line-height: 1.1;
-          }
-
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .descricao-produto,
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .marca-produto {
-              font-size: 30pt !important; /* Aumenta descrição e marca */
-              margin-top: 8pt !important;
-              line-height: 1.2;
-          }
-          
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .peso-produto {
-              font-size: 20pt !important; /* Aumenta peso */
-              top: 60mm !important; 
-              right: 15mm !important;
-          }
-          
-          /* SOLUÇÃO FINAL PARA O PREÇO: FORÇAR O TAMANHO GIGANTE NO A4 */
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .valor-principal {
-              font-size: 300pt !important; /* Corrigido: Tamanho fixo e gigante */
-              line-height: 1 !important;
-              letter-spacing: 7pt !important;
-              margin-top: 20pt !important; 
-          }
-          
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .valor-principal .centavos {
-              font-size: 200pt !important; /* Corrigido: Tamanho fixo e gigante */
-              top: 40pt !important; 
-              margin-left: -10pt !important; 
-          }
-
-          /* CORREÇÃO FINAL DO "CADA" NO A4 */
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .info-adicional {
-              font-size: 30pt !important;
-              top: 98% !important; 
-              left: 42% !important; /* MUDANÇA AQUI: mais para a esquerda */
-              transform: none !important;
-          }
-
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .logo-empresa {
-              width: 150pt !important; 
-              bottom: 10mm !important; 
-              
-          }
-          .etiqueta[style*="--etiqueta-largura: 190mm"] .logo-empresa svg {
-            width: 150pt !important;
-          }
-
-          /* NOVO: Oculta o logo na etiqueta customizada */
-          .etiqueta[style*="--etiqueta-largura: 74mm"] .logo-empresa {
-              display: none !important;
-          }
-      }
+        .logo-box {
+            position: absolute;
+            bottom: 5%;
+            padding: 0.5em 1.5em;
+            background-color: #4c68d2;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 5px;
+        }
     </style>
-  </head>
-  <body onload="atualizarPreview()">
-    <div class="container-principal">
-      <div class="formulario">
-        <h2>Adicionar Produto</h2>
-        <label for="tamanhoEtiqueta">Tamanho da Etiqueta:</label>
-        <select id="tamanhoEtiqueta" onchange="atualizarPreview()">
-            <option value="A4">A4 (190mm x 277mm) - Folha Cheia</option> 
-          <option value="A5">A5 (148mm x 210mm) - Média</option>
-          <option value="A6" selected>A6 (105mm x 148mm) - Pequena (Base)</option>
-          <option value="Custom">Customizado (74mm x 105mm)</option>
-        </select>
+</head>
+<body>
+
+<div class="controls">
+    <label for="size-select">Redimensionar para:</label>
+    <select id="size-select" onchange="resizeOffer(this.value)">
+        <option value="A4" selected>A4 (210 x 297 mm)</option>
+        <option value="A5">A5 (148 x 210 mm)</option>
+        <option value="A6">A6 (105 x 148 mm)</option>
+        <option value="A7">A7 (74 x 105 mm)</option>
+    </select>
+    <button onclick="window.print()">Imprimir Oferta</button>
+</div>
+
+<div class="page-container" id="offer-page-single">
+
+    <div class="offer-title color-red font-impact" contenteditable="true">OFERTA</div>
+
+    <div class="weight-box text-black editable-box" contenteditable="true">450G</div>
+
+    <div class="description text-black" contenteditable="true">PÃO DE FORMA</div>
+    <div class="description text-black" contenteditable="true">12 GRÃOS</div>
+    <div class="pullman color-red" contenteditable="true">PULLMAN</div>
+
+    <div class="price-line-single">
         
-        <form id="formEtiqueta" oninput="atualizarPreview()"> 
-          <label for="produto">Produto:</label>
-          <input type="text" id="produto" placeholder="Ex: Pão de Forma" required value="Bisnaguinha">
-          <label for="descricao">Descrição:</label>
-          <input type="text" id="descricao" placeholder="Ex: Integral 12 Grãos" value="INTEIRAL">
-          <label for="marca">Marca:</label>
-          <input type="text" id="marca" placeholder="Ex: Pullman" value="BAUDUCCO">
-          <label for="precoCheio">Preço (R$):</label>
-          <input type="number" id="precoCheio" step="0.01" placeholder="Ex: 5.99" required value="6.50">
-          <label for="unidade">Unidade (CADA, KG, LT...):</label>
-          <input type="text" id="unidade" value="CADA" placeholder="Ex: CADA, KG, LT" required>
-          <label for="peso">Peso/Volume (Opcional):</label>
-          <input type="text" id="peso" placeholder="Ex: 450g ou 1 Litro">
-        </form>
-        <div class="botoes-acao">
-          <button id="btnAddEtiqueta" onclick="adicionarEtiqueta()">Adicionar Etiqueta</button>
+        <!-- Símbolo Monetário R$ (Apenas o texto) -->
+        
+        <div class="price-group-single color-red font-impact">
+            <span class="price-real-single editable-box" contenteditable="true">5</span>
+            <span class="price-centavos-single editable-box" contenteditable="true">,99</span>
         </div>
-
-        <h3 style="margin-top: 30px;">Pré-visualização (Tempo Real):</h3>
-        <div id="preview-etiqueta-wrapper">
-            <div id="preview-etiqueta" class="etiqueta">
-              <p style="text-align: center; font-style: italic; color: #555; padding: 20px;">Carregando...</p>
-            </div>
-        </div>
-      </div>
-
-      <div class="container-etiquetas-impressao">
-        <h3>Lista de Etiquetas para Impressão:</h3>
-        <div class="botoes-acao">
-            <button id="btnPrint" onclick="window.print()">Imprimir Etiquetas</button>
-            <button id="btnLimpar" onclick="limparEtiquetas()">Limpar Lista</button>
-        </div>
-        <hr style="border: 0; border-top: 1px solid #eee;">
-        <div id="etiquetas-output">
-          <p>Use o formulário para montar sua lista.</p>
-        </div>
-      </div>
     </div>
-    <script>
-      /* ==================== LÓGICA JAVASCRIPT ==================== */
-      
-      const LARGURA_REFERENCIA = 105; // Largura do A6 em mm (usada como 100% de escala)
-      const MM_TO_PX = 3.7795275591; // Conversão aproximada: 1mm = 3.7795275591px @ 96dpi
 
-      const TAMANHOS_ETIQUETA = {
-          'A4': { width: '190mm', height: '277mm', nome: 'A4' }, // Ajustado para preencher a folha A4
-          'A5': { width: '148mm', height: '210mm', nome: 'A5' },
-          'A6': { width: '105mm', height: '148mm', nome: 'A6' },
-          'Custom': { width: '74mm', height: '105mm', nome: 'Custom' } 
-      };
-
-      function getValor(id) {
-        return document.getElementById(id).value.trim();
-      }
-
-      function formatarPreco(preco) {
-        const valor = parseFloat(preco) || 0;
-        return valor.toFixed(2).replace('.', ',');
-      }
-
-      function gerarLogoSvg() {
-        return `
-            <svg viewBox="0 0 100 20">
-              <rect x="0" y="0" width="100" height="20" rx="10" fill="#66b3ff" />
-              <rect x="0" y="0" width="100" height="20" rx="10" fill="url(#grad)" />
-              <defs>
-                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" style="stop-color:#3f7bbf;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#66b3ff;stop-opacity:1" />
-                </linearGradient>
-              </defs>
-              <circle cx="20" cy="10" r="7" fill="white" />
-              <text x="20" y="13" font-family="Poppins, sans-serif" font-size="8" text-anchor="middle" fill="#E60000" font-weight="900">G</text>
-              <text x="50" y="13" font-family="Poppins, sans-serif" font-size="8" text-anchor="middle" fill="white" font-weight="700">GRUPO</text>
-              <text x="80" y="13" font-family="Poppins, sans-serif" font-size="8" text-anchor="middle" fill="white" font-weight="700">MEGA</text>
-            </svg>
-        `;
-      }
-      
-      function gerarEtiquetaHtml(nomeProduto, descricao, marca, precoCheio, unidade, peso, tamanhoEtiqueta) {
-          const precoFormatado = formatarPreco(precoCheio);
-          const partesPreco = precoFormatado.split(',');
-          const reais = partesPreco[0];
-          const centavos = partesPreco[1];
-          const dimensoes = TAMANHOS_ETIQUETA[tamanhoEtiqueta] || TAMANHOS_ETIQUETA.Custom;
-
-          const valorPrincipalHtml = `${reais}<span class="centavos">,${centavos}</span>`;
-
-          let infoProdutoHtml = '';
-          if (nomeProduto) infoProdutoHtml += `<div class="nome-produto">${nomeProduto.toUpperCase()}</div>`;
-          if (descricao) infoProdutoHtml += `<div class="descricao-produto">${descricao.toUpperCase()}</div>`;
-          if (marca) infoProdutoHtml += `<div class="marca-produto">${marca.toUpperCase()}</div>`;
-
-          const logoSvg = gerarLogoSvg();
-          const pesoHtml = peso ? `<div class="peso-produto">${peso}</div>` : '';
-          
-          // Cálculo e aplicação do fator de escala de DESIGN (baseado em A6=105mm)
-          const larguraAtualMM = parseFloat(dimensoes.width.replace('mm', '')); 
-          const fatorEscala = (larguraAtualMM / LARGURA_REFERENCIA).toFixed(2); 
-
-          // CORREÇÃO: Usamos o fator de escala de design normal para a pré-visualização.
-          // O ajuste de preço para o A4 será feito SOMENTE no CSS @media print.
-          const fatorEscalaPreco = fatorEscala;
-          
-          // Adiciona as variáveis CSS com as dimensões e o fator de escala
-          const styleVariavel = `
-            --etiqueta-largura: ${dimensoes.width}; 
-            --etiqueta-altura: ${dimensoes.height};
-            --fator-escala: ${fatorEscala}; 
-            --fator-escala-preco: ${fatorEscalaPreco}; /* Agora igual ao fatorEscala */
-            width: ${dimensoes.width};
-            height: ${dimensoes.height};
-          `;
+    <!-- Texto "CADA" -->
+    <div class="text-cada text-black" contenteditable="true">CADA</div>
 
 
-          return `
-            <div class="etiqueta" style="${styleVariavel}">
-                <div class="etiqueta-conteudo">
-                    <div class="oferta-tag">OFERTA</div>
-                    ${pesoHtml}
-                    <div class="info-produto-container">${infoProdutoHtml}</div>
-                    <div class="preco-e-unidade">
-                      <div class="valor-principal">${valorPrincipalHtml}</div>
-                      <div class="info-adicional">${unidade.toUpperCase()}</div>
-                    </div>
-                </div>
-                <div class="logo-empresa">${logoSvg}</div>
-            </div>
-          `;
-      }
+    <div class="logo-box" contenteditable="true">
+        GRUPO MEGA
+    </div>
+</div>
 
-      function atualizarPreview() {
-        const nomeProduto = getValor('produto');
-        const precoCheio = parseFloat(getValor('precoCheio'));
-        const tamanhoSelecionado = getValor('tamanhoEtiqueta');
-        const previewDiv = document.getElementById('preview-etiqueta');
-        
-        const dimensoes = TAMANHOS_ETIQUETA[tamanhoSelecionado] || TAMANHOS_ETIQUETA.Custom;
-        
-        // --- Cálculo do fator de escala de VISUALIZAÇÃO (apenas para caber na tela) ---
-        const larguraMM = parseFloat(dimensoes.width.replace('mm', ''));
-        const larguraPX = larguraMM * MM_TO_PX;
-        const maxLarguraContainer = 280; 
-        
-        // Fator de escala de VISUALIZAÇÃO (para caber no container)
-        const fatorDisplay = Math.min(1, maxLarguraContainer / larguraPX); 
-        
-        // Aplica o fator de escala de VISUALIZAÇÃO
-        const scaleTransform = `scale(${fatorDisplay})`;
-        
-        previewDiv.style.transform = scaleTransform;
-        previewDiv.style.transformOrigin = 'top left';
+<script>
+    const root = document.documentElement;
+    const rootStyles = root.style;
 
-        if (nomeProduto && !isNaN(precoCheio) && precoCheio > 0) {
-          const descricao = getValor('descricao');
-          const marca = getValor('marca');
-          const unidade = getValor('unidade') || 'CADA';
-          const peso = getValor('peso');
-          
-          const conteudoEtiqueta = gerarEtiquetaHtml(nomeProduto, descricao, marca, precoCheio, unidade, peso, tamanhoSelecionado);
-          
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(conteudoEtiqueta, 'text/html');
-          
-          const novaEtiqueta = doc.querySelector('.etiqueta');
-          
-          if (novaEtiqueta) {
-            // Aplicar os estilos dinâmicos, mantendo o scale
-            previewDiv.style.cssText = novaEtiqueta.style.cssText + `transform: ${scaleTransform}; transform-origin: top left;`;
-            previewDiv.innerHTML = novaEtiqueta.innerHTML;
-          }
-
-        } else {
-          // Garante que o placeholder também tenha as dimensões corretas (em escala)
-          const larguraAtualMM = parseFloat(dimensoes.width.replace('mm', '')); 
-          const fatorEscalaReal = (larguraAtualMM / LARGURA_REFERENCIA).toFixed(2); 
-
-          // CORREÇÃO: Removemos a lógica de forçar o 1.8 aqui também
-          const fatorEscalaPreco = fatorEscalaReal;
-
-          previewDiv.style.cssText = `
-            width: ${dimensoes.width}; 
-            height: ${dimensoes.height};
-            --etiqueta-largura: ${dimensoes.width};
-            --etiqueta-altura: ${dimensoes.height};
-            --fator-escala: ${fatorEscalaReal};
-            --fator-escala-preco: ${fatorEscalaPreco}; /* Agora igual ao fatorEscalaReal */
-            transform: ${scaleTransform}; 
-            transform-origin: top left;
-          `;
-          previewDiv.innerHTML = '<p style="text-align: center; font-style: italic; color: #555; padding: 20px;">Preencha os campos para ver a etiqueta.</p>';
+    // Configurações de escala para cada formato
+    const sizes = {
+        'A4': { 
+            width: '210mm', height: '297mm', base_font: '16px',
+            // Ajustes de Posicionamento A4
+            '--weight-top': '20%', '--weight-right': '8%', '--weight-rotate': '-18deg',
+            '--real-top': '0',
+            '--centavos-top': '-0.6em', 
+            '--centavos-margin-left': '-85px', /* AUMENTADO para mover para a esquerda */
+            '--text-cada-font-size': '3.5em'
+        },
+        'A5': { 
+            width: '148mm', height: '210mm', base_font: '12px',
+            // Ajustes de Posicionamento A5
+            '--weight-top': '18%', '--weight-right': '3%', '--weight-rotate': '-15deg',
+            '--real-top': '0',
+            '--centavos-top': '-0.6em', 
+            '--centavos-margin-left': '-60px', /* AUMENTADO para mover para a esquerda */
+            '--text-cada-font-size': '2.5em',
+        },
+        'A6': { 
+            width: '105mm', height: '148mm', base_font: '9px',
+            // Ajustes de Posicionamento A6
+            '--weight-top': '18%', '--weight-right': '2%', '--weight-rotate': '-12deg',
+            '--real-top': '0',
+            '--centavos-top': '-0.6em', 
+            '--centavos-margin-left': '-45px', /* AUMENTADO para mover para a esquerda */
+            '--text-cada-font-size': '2.2em'
+        },
+        'A7': { 
+            width: '74mm', height: '105mm', base_font: '7px',
+            // Ajustes de Posicionamento A7
+            '--weight-top': '28%', '--weight-right': '1%', '--weight-rotate': '-10deg',
+            '--real-top': '0',
+            '--centavos-top': '-0.6em', 
+            '--centavos-margin-left': '-35px', /* AUMENTADO para mover para a esquerda */
+            '--text-cada-font-size': '1.8em'
         }
-      }
+    };
 
-      function adicionarEtiqueta() {
-        const nomeProduto = getValor('produto');
-        const precoCheio = parseFloat(getValor('precoCheio'));
-        const tamanhoSelecionado = getValor('tamanhoEtiqueta');
-        
-        if (!nomeProduto || isNaN(precoCheio) || precoCheio <= 0) {
-          alert("Por favor, preencha o nome do produto e um preço válido.");
-          return;
+    function resizeOffer(sizeKey) {
+        const size = sizes[sizeKey];
+        if (size) {
+            // 1. Aplica as dimensões principais
+            rootStyles.setProperty('--width', size.width);
+            rootStyles.setProperty('--height', size.height);
+            rootStyles.setProperty('--main-font-size', size.base_font);
+
+            // 2. Aplica os ajustes finos de posicionamento para o formato
+            rootStyles.setProperty('--weight-top', size['--weight-top']);
+            rootStyles.setProperty('--weight-right', size['--weight-right']);
+            rootStyles.setProperty('--weight-rotate', size['--weight-rotate']);
+            rootStyles.setProperty('--real-top', size['--real-top']);
+            rootStyles.setProperty('--centavos-top', size['--centavos-top']);
+            rootStyles.setProperty('--centavos-margin-left', size['--centavos-margin-left']);
+            rootStyles.setProperty('--text-cada-font-size', size['--text-cada-font-size']);
         }
+    }
 
-        const descricao = getValor('descricao');
-        const marca = getValor('marca');
-        const unidade = getValor('unidade') || 'CADA';
-        const peso = getValor('peso');
+    // Inicializa o tamanho padrão
+    resizeOffer('A4');
+</script>
 
-        const outputDiv = document.getElementById('etiquetas-output');
-        
-        const mensagemInicial = outputDiv.querySelector('p');
-        if (mensagemInicial) outputDiv.removeChild(mensagemInicial);
-
-        const novaEtiquetaHtml = gerarEtiquetaHtml(nomeProduto, descricao, marca, precoCheio, unidade, peso, tamanhoSelecionado);
-        
-        const etiquetaElement = document.createElement('div');
-        etiquetaElement.innerHTML = novaEtiquetaHtml;
-        const etiquetaPronta = etiquetaElement.querySelector('.etiqueta');
-        
-        // Remove a propriedade 'transform' para que na lista de impressão ela não esteja escalada
-        etiquetaPronta.style.removeProperty('transform');
-        etiquetaPronta.style.removeProperty('transform-origin');
-        
-        outputDiv.appendChild(etiquetaPronta);
-
-        document.getElementById('formEtiqueta').reset();
-        document.getElementById('unidade').value = 'CADA';
-        document.getElementById('produto').focus();
-        
-        atualizarPreview();
-      }
-
-      function limparEtiquetas() {
-        if (confirm("Tem certeza que deseja limpar a lista de etiquetas?")) {
-          document.getElementById('etiquetas-output').innerHTML = '<p>Use o formulário para montar sua lista.</p>';
-        }
-      }
-      
-      // Chama a função ao carregar para mostrar o estado inicial
-      document.addEventListener('DOMContentLoaded', atualizarPreview);
-
-    </script>
-  </body>
+</body>
 </html>
