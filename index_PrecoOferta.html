@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editor de Oferta (Imprime 1 Página)</title>
-    <!-- Incluindo Tailwind CSS para uma aparência mais moderna no controle -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Configuração de Fontes e Cores */
+        /* [ ... restante do CSS (não alterado) ... ] */
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700;900&display=swap');
         
         :root {
-            /* Variáveis CSS para Dimensões e Posições (Padrão A7 - INICIADO AQUI) */
             --width: 74mm;
             --height: 105mm;
-            /* Variáveis de ajuste que serão alteradas via JS */
             --weight-top: 25%;
             --weight-right: 1%;
             --weight-rotate: -10deg;
@@ -28,9 +25,8 @@
             font-family: 'Arial Black', Arial, sans-serif;
             text-align: center;
             background-color: #f0f0f0;
-            /* Garante que o body não adiciona margem ou padding extra no container */
             margin: 0;
-            padding: 20px; /* Padding apenas para visualização no navegador */
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -47,24 +43,25 @@
             gap: 1rem;
             align-items: center;
         }
-        .controls button {
+        .controls button, .controls a button { /* Garante que os botões (diretos ou em links) tenham estilo base */
             background-color: #d90000;
             transition: background-color 0.2s;
+            /* Classes do Tailwind que já estavam no HTML: */
+            /* px-4 py-2 font-bold text-white bg-red-600 rounded-lg shadow-md transition-all duration-150 */
         }
-        .controls button:hover {
+        .controls button:hover, .controls a button:hover {
             background-color: #b00000;
         }
 
-        /* --- REGRAS DE IMPRESSÃO (CRÍTICO: Garantia de página única) --- */
+        /* [ ... restante do CSS (regras de impressão, page-container, etc.) ... ] */
         @page { 
             size: var(--width) var(--height); 
-            margin: 0; /* Zero margem na página */
+            margin: 0;
         }
         
         @media print {
             .controls { display: none; }
             
-            /* ADIÇÃO CRÍTICA: Garante que o body seja zerado */
             body {
                 margin: 0 !important;
                 padding: 0 !important;
@@ -72,25 +69,21 @@
                 overflow: hidden !important; 
             }
 
-            /* Garante que o container ocupe exatamente a página sem sombra */
             .page-container { 
                 box-shadow: none; 
                 margin: 0 !important; 
-                padding: 4% 5% !important; /* Mantém o padding interno de design */
+                padding: 4% 5% !important;
                 width: var(--width) !important;
                 height: var(--height) !important;
                 box-sizing: border-box !important;
             }
 
-            /* Garante que os fundos e cores sejam impressos */
             * {
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
             }
         }
-        /* FIM DAS REGRAS CRÍTICAS DE IMPRESSÃO */
-
-        /* --- CONTAINER PRINCIPAL (A4/A5/etc.) --- */
+        
         .page-container {
             width: var(--width);
             height: var(--height);
@@ -100,24 +93,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Padding interno que define a "margem" do design */
             padding: 4% 5%; 
             box-sizing: border-box;
             position: relative;
             transition: width 0.3s, height 0.3s;
             font-size: var(--main-font-size);
             overflow: hidden;
-            /* CONFI GURAÇÃO: LINHA PONTILHADA NAS BORDAS */
             border: 1px dashed black;
         }
-        
-        /* --- ESTILOS VISUAIS E DE CONTEÚDO --- */
         
         .color-red { color: #d90000; }
         .text-black { color: black; }
         .font-impact { font-family: Impact, 'Impact', sans-serif; }
 
-        /* Estilo de Edição */
         [contenteditable]:focus {
             outline: 2px dashed rgba(0, 0, 0, 0.4);
             cursor: text;
@@ -137,7 +125,6 @@
             line-height: 0.9;
         }
 
-        /* Peso (Usa as Variáveis de Posição) */
         .weight-box { 
             position: absolute; 
             top: var(--weight-top); 
@@ -148,7 +135,6 @@
             min-width: 80px;
         }
         
-        /* Descrições */
         .description, .pullman { font-size: 2.1em; font-weight: 900; line-height: 1.1; margin-bottom: 0.2em; }
         .pullman { margin-bottom: 1.5em; }
 
@@ -156,25 +142,22 @@
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            /* Ajustado para economizar espaço e evitar transbordo */
             margin: -1.2em 0; 
             line-height: 1;
             
         }
 
-        /* Quantidade (1 ou 2) */
         .qty-value { 
             font-size: 12em; 
             margin-right: 0.1em; 
             min-width: 0.6em; 
-            transform: scaleX(1.1); /* aumenta a largura em 50% */
+            transform: scaleX(1.1);
             display: inline-block;
-            transform: scaleY(1.3); /* aumenta a altura em 30% */
+            transform: scaleY(1.3);
             display: inline-block;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
         
-        /* Símbolo Monetário (Texto "por") */
         .currency-symbol {
             font-size: 2.4em;
             position: relative;
@@ -186,22 +169,20 @@
 
         .price-group { display: flex; align-items: flex-start; }
         
-        /* Valor Inteiro (6 ou 10) */
         .price-real {
             font-size: 12em;
             margin: 0;
             padding: 0;
             height: 1em;
             min-width: 1.5em;
-            transform: scaleX(1.1); /* aumenta a largura em 50% */
-            display: inline-block; /* necessário para o transform funcionar */
-            transform: scaleY(1.3); /* aumenta a altura em 30% */
+            transform: scaleX(1.1);
+            display: inline-block;
+            transform: scaleY(1.3);
             display: inline-block;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             
         }
         
-        /* Centavos */
         .price-centavos {
             font-size: 8em;
             font-weight: 500;
@@ -209,12 +190,11 @@
             top: var(--centavos-top);
             margin-left: var(--centavos-margin-left);
             min-width: 1.5em;
-            transform: scaleY(1.3); /* aumenta a altura em 30% */
+            transform: scaleY(1.3);
             display: inline-block;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
 
-        /* Linha Separadora */
         .separator-ou-line { 
             display: flex; 
             align-items: center; 
@@ -237,7 +217,7 @@
         }
         
         .logo-box {
-            margin-top: 5em; /* Reduzida a margem para ajudar a caber em todos os formatos */
+            margin-top: 5em;
             padding: 0.5em 1.5em;
             background-color: #4c68d2;
             color: white;
@@ -275,7 +255,6 @@
 
     <div class="weight-box text-black editable-box" contenteditable="true">480G</div>
 
-    <!-- Descrições e Marca com a nova classe 'uppercase-on-blur' -->
     <div class="description text-black uppercase-on-blur" contenteditable="true">NOME DO PRODUTO</div>
     <div class="description text-black uppercase-on-blur" contenteditable="true">DESCRIÇÃO</div>
     <div class="pullman color-red uppercase-on-blur" contenteditable="true">MARCA</div>
@@ -314,13 +293,12 @@
 </div>
 
 <script>
-    // Configurações de escala para cada formato
+    // [ ... restante do JS (não alterado) ... ]
     const sizes = {
         'A4': { 
             width: '210mm', 
             height: '297mm', 
             base_font: '18px',
-            // Ajustes de Posicionamento A4
             '--weight-top': '16%', 
             '--weight-right': '5%', 
             '--weight-rotate': '-18deg',
@@ -332,7 +310,6 @@
             width: '148mm', 
             height: '210mm', 
             base_font: '12.5px',
-            // Ajustes de Posicionamento A5
             '--weight-top': '18%', 
             '--weight-right': '3%', 
             '--weight-rotate': '-15deg',
@@ -344,7 +321,6 @@
             width: '105mm', 
             height: '148mm', 
             base_font: '8.5px',
-            // Ajustes de Posicionamento A6
             '--weight-top': '18%', 
             '--weight-right': '2%', 
             '--weight-rotate': '-12deg',
@@ -356,7 +332,6 @@
             width: '74mm', 
             height: '105mm', 
             base_font: '6px',
-            // Ajustes de Posicionamento A7
             '--weight-top': '25%', 
             '--weight-right': '1%', 
             '--weight-rotate': '-10deg',
@@ -371,12 +346,10 @@
     function resizeOffer(sizeKey) {
         const size = sizes[sizeKey];
         if (size) {
-            // 1. Aplica as dimensões principais (CSS custom properties)
             root.style.setProperty('--width', size.width);
             root.style.setProperty('--height', size.height);
             root.style.setProperty('--main-font-size', size.base_font);
 
-            // 2. Aplica os ajustes finos de posicionamento para o formato
             root.style.setProperty('--weight-top', size['--weight-top']);
             root.style.setProperty('--weight-right', size['--weight-right']);
             root.style.setProperty('--weight-rotate', size['--weight-rotate']);
@@ -386,7 +359,6 @@
         }
     }
 
-    // Função para converter o texto de um elemento para maiúsculas
     function toUpperCase(event) {
         const element = event.target;
         if (element.textContent) {
@@ -394,17 +366,13 @@
         }
     }
 
-    // Inicializa o tamanho padrão e configura os eventos
     document.addEventListener('DOMContentLoaded', () => {
-        // CONFI GURAÇÃO: Inicializa para A7
         resizeOffer('A4');
         
-        // Adiciona o listener 'blur' (quando o foco sai do campo) para a nova classe
         document.querySelectorAll('.uppercase-on-blur').forEach(element => {
             element.addEventListener('blur', toUpperCase);
         });
 
-        // Executa a conversão inicial para garantir que o conteúdo padrão também esteja em MAIÚSCULAS
         document.querySelectorAll('.uppercase-on-blur').forEach(element => {
             toUpperCase({ target: element });
         });
