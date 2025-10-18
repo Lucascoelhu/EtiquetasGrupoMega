@@ -133,7 +133,7 @@
             font-weight: 900; 
             margin-top: 0.5em; 
             margin-bottom: 0.6em; 
-            letter-spacing: -1px; 
+            letter-spacing: 1.2px; 
             line-height: 0.9;
         }
 
@@ -180,6 +180,7 @@
             top: var(--currency-top);
             margin: 0 0em;
             font-weight: bold;
+            margin-right: -0.5em;
         }
 
         .price-group { display: flex; align-items: flex-start; }
@@ -219,7 +220,7 @@
             margin-top: 2.6em;
         }
         .separator-ou { 
-            font-size: 1.6em; 
+            font-size: 2em; 
             font-weight: bold; 
             color: #d90000; 
             padding: 0 12px; 
@@ -248,7 +249,7 @@
 <div class="controls">
     <label for="size-select" class="text-sm font-semibold text-gray-700">Redimensionar para:</label>
     <select id="size-select" onchange="resizeOffer(this.value)" class="p-2 border border-gray-300 rounded-lg">
-        <option value="A4" selected> A4 (210 x 297 mm)</option>
+        <option value="A4"selected > A4 (210 x 297 mm)</option>
         <option value="A5">A5 (148 x 210 mm)</option>
         <option value="A6">A6 (105 x 148 mm)</option>
         <option value="A7">A7 (74 x 105 mm)</option>
@@ -400,4 +401,3 @@
 
 </body>
 </html>
-
