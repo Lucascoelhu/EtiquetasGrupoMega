@@ -225,14 +225,22 @@
 <body>
 
 <div class="controls">
-    <label for="size-select">Redimensionar para:</label>
-    <select id="size-select" onchange="resizeOffer(this.value)">
-        <option value="A4"selected >A4 (210 x 297 mm)</option>
+    <label for="size-select" class="text-sm font-semibold text-gray-700">Redimensionar para:</label>
+    <select id="size-select" onchange="resizeOffer(this.value)" class="p-2 border border-gray-300 rounded-lg">
+        <option value="A4"selected > A4 (210 x 297 mm)</option>
         <option value="A5">A5 (148 x 210 mm)</option>
         <option value="A6">A6 (105 x 148 mm)</option>
         <option value="A7">A7 (74 x 105 mm)</option>
     </select>
-    <button onclick="window.print()">Imprimir Oferta</button>
+    
+    
+    <button onclick="window.print()" class="px-4 py-2 font-bold hover:shadow-lg transition-shadow">Imprimir Oferta</button>
+    
+    <a href="index.html">
+        <button class="menu-button px-4 py-2 font-bold text-gray-800 bg-white border-2 border-gray-300 rounded-lg shadow-md transition-all duration-150">
+            Voltar para o Menu
+        </button>
+    </a>
 </div>
 
 <div class="page-container" id="offer-page-single">
