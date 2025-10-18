@@ -127,9 +127,9 @@
         .offer-title { 
             font-size: 6em; 
             font-weight: 900; 
-            margin-top: 0.5em; 
+            margin-top: 0.3em; 
             margin-bottom: 0.8em; 
-            letter-spacing: -1px; 
+            letter-spacing: 1.2px; 
         }
 
         /* Peso */
@@ -225,10 +225,10 @@
 <div class="controls">
     <label for="size-select">Redimensionar para:</label>
     <select id="size-select" onchange="resizeOffer(this.value)">
-        <option value="A4" selected>A4 (210 x 297 mm)</option>
+        <option value="A4">A4 (210 x 297 mm)</option>
         <option value="A5">A5 (148 x 210 mm)</option>
         <option value="A6">A6 (105 x 148 mm)</option>
-        <option value="A7">A7 (74 x 105 mm)</option>
+        <option value="A7"selected >A7 (74 x 105 mm)</option>
     </select>
     <button onclick="window.print()">Imprimir Oferta</button>
 </div>
@@ -310,22 +310,22 @@
             '--weight-top': '18%', '--weight-right': '2%', '--weight-rotate': '-12deg',
             
             // Posição CADA e LOGO
-            '--cada-top': '73%', '--cada-right': '23%', 
+            '--cada-top': '73%', '--cada-right': '19%', 
             '--logo-top': '90%', '--logo-right': '143px', 
             
             // Posição Preço
-            '--real-top': '0.1em',
-            '--centavos-top': '-0.5em', 
+            '--real-top': '-0.1em',
+            '--centavos-top': '-0.67em', 
             '--centavos-margin-left': '-40px', 
             '--text-cada-font-size': '2.3em', 
             
             // Propriedades de Estilo (Tamanho/Transformação)
-            '--real-font-size': '20em',      
+            '--real-font-size': '25em',      
             '--real-margin-left': '-0.6em',  
             '--real-transform-x': '1.05',    
-            '--centavos-font-size': '11em',   
+            '--centavos-font-size': '15em',   
             '--centavos-line-height': '0.3',
-            '--centavos-margin-right': '-0.6em'  
+            '--centavos-margin-right': '-0.3em'  
         },
         'A7': { 
             width: '74mm', height: '105mm', base_font: '7px',
@@ -333,7 +333,7 @@
             '--weight-top': '23%', '--weight-right': '1%', '--weight-rotate': '-10deg',
             
             // Posição CADA e LOGO
-            '--cada-top': '79%', '--cada-right': '27%', 
+            '--cada-top': '79%', '--cada-right': '23%', 
             '--logo-top': '90%', '--logo-right': '90px', 
             
             // Posição Preço
@@ -343,10 +343,10 @@
             '--text-cada-font-size': '1.8em', 
             
             // Propriedades de Estilo (Tamanho/Transformação)
-            '--real-font-size': '17em',      
+            '--real-font-size': '20em',      
             '--real-margin-left': '-0.6em',  
             '--real-transform-x': '1.0',     
-            '--centavos-font-size': '9em',   
+            '--centavos-font-size': '11em',   
             '--centavos-line-height': '0.3',
             '--centavos-margin-right': '-0.4em'  
         }
@@ -395,4 +395,3 @@
     
 </body>
 </html>
-
