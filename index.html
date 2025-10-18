@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Principal - Gerador de Etiquetas</title>
-    <!-- Carrega Tailwind CSS CDN para usar classes utilitárias -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Carrega a fonte Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Configuração do Tailwind para usar a fonte Poppins -->
     <script>
         tailwind.config = {
             theme: {
@@ -19,7 +16,7 @@
                     },
                     colors: {
                         'primary-blue': '#3f7bbf', // Cor Principal
-                        'bg-light': '#f8f9fb', // Cor de Fundo
+                        // 'bg-light' não será mais usado no body, mas mantido para referência
                         'btn-cheio': '#00b894', // Verde/Teal
                         'btn-oferta': '#e74c3c', // Vermelho
                     }
@@ -28,8 +25,11 @@
         }
     </script>
     
-    <!-- Estilo para o hover, que é mais fácil de fazer com CSS puro para um efeito de brilho -->
     <style>
+        .shine-effect {
+            position: relative;
+            overflow: hidden; /* Importante para o efeito de brilho não sair para fora */
+        }
         .shine-effect::after {
             content: '';
             position: absolute;
@@ -37,67 +37,55 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transition: transform 0.5s ease;
-            transform: scaleX(0);
-            transform-origin: left;
-            z-index: 10; /* Garante que o efeito fique acima do fundo, mas abaixo do texto */
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.1) 100%);
+            transition: transform 0.8s ease-in-out;
+            transform: translateX(-100%) skewX(-20deg); /* Começa fora da vista e inclinado */
+            z-index: 10;
         }
         .shine-effect:hover::after {
-            transform: scaleX(1);
+            transform: translateX(100%) skewX(-20deg); /* Move o brilho pela largura do botão */
         }
     </style>
 </head>
-<body class="bg-bg-light font-sans flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-900 font-sans flex items-center justify-center min-h-screen p-4">
 
-    <!-- Container Principal do Menu -->
-    <div class="menu-container bg-white p-8 md:p-12 rounded-3xl shadow-2xl text-center max-w-sm w-full border-t-8 border-primary-blue transition duration-500 hover:shadow-primary-blue/30">
+    <div class="menu-container bg-white p-8 md:p-12 rounded-3xl shadow-2xl text-center max-w-sm w-full border-t-[10px] border-primary-blue transition duration-500 hover:shadow-primary-blue/50">
         
-        <!-- Título -->
-        <div class="text-gray-800 text-3xl md:text-4xl font-black mb-1 leading-tight uppercase">
-            Gerador de Etiquetas
+        <div class="text-gray-900 text-3xl md:text-4xl font-extrabold mb-1 leading-tight uppercase tracking-wider">
+            🏷️ Gerador de Etiquetas
         </div>
         
-        <!-- Subtítulo -->
-        <div class="text-gray-500 text-lg mb-8 font-light">
+        <div class="text-gray-500 text-md mb-8 font-medium">
             Grupo Mega - Selecione o Tipo de Etiqueta
         </div>
         
-        <!-- Opções de Botão -->
-        <div class="flex flex-col space-y-5">
+        <div class="flex flex-col space-y-6">
             
-            <!-- Botão: Etiqueta Padrão -->
             <a href="index_PrecoCheio.html" 
-               class="shine-effect relative overflow-hidden flex items-center justify-between min-h-[70px] px-6 py-4 
-                      rounded-xl cursor-pointer text-white text-lg font-bold shadow-lg transition duration-300 ease-in-out
-                      bg-gradient-to-br from-btn-cheio to-green-700 hover:from-green-400 hover:to-green-800 
-                      hover:translate-y-[-4px] hover:shadow-xl hover:shadow-btn-cheio/50">
+                class="shine-effect relative overflow-hidden flex items-center justify-between min-h-[80px] px-6 py-4 
+                       rounded-2xl cursor-pointer text-white text-xl font-extrabold shadow-xl transition-all duration-300 ease-in-out
+                       bg-gradient-to-tr from-btn-cheio to-green-600 hover:from-green-500 hover:to-green-700 
+                       hover:translate-y-[-6px] hover:shadow-2xl hover:shadow-btn-cheio/60 group">
                 
-                <!-- Ícone (Moeda) -->
-                <span class="text-3xl opacity-90 z-20">R$</span>
+                <span class="text-4xl opacity-90 z-20 group-hover:text-yellow-300 transition-colors">💰</span>
                 
-                <!-- Texto Central -->
-                <span class="flex-grow text-center z-20">Etiqueta Padrão (R$ X,XX CADA)</span>
+                <span class="flex-grow text-center z-20">PREÇO UNICO</span>
             </a>
             
-            <!-- Botão: Etiqueta Dupla/Oferta -->
             <a href="index_PrecoOferta.html" 
-               class="shine-effect relative overflow-hidden flex items-center justify-between min-h-[70px] px-6 py-4 
-                      rounded-xl cursor-pointer text-white text-lg font-bold shadow-lg transition duration-300 ease-in-out
-                      bg-gradient-to-br from-btn-oferta to-red-700 hover:from-red-400 hover:to-red-800 
-                      hover:translate-y-[-4px] hover:shadow-xl hover:shadow-btn-oferta/50">
+                class="shine-effect relative overflow-hidden flex items-center justify-between min-h-[80px] px-6 py-4 
+                       rounded-2xl cursor-pointer text-white text-xl font-extrabold shadow-xl transition-all duration-300 ease-in-out
+                       bg-gradient-to-tr from-btn-oferta to-red-600 hover:from-red-500 hover:to-red-700 
+                       hover:translate-y-[-6px] hover:shadow-2xl hover:shadow-btn-oferta/60 group">
                 
-                <!-- Ícone (Divisão) -->
-                <span class="text-3xl opacity-90 z-20">X/Y</span>
+                <span class="text-4xl opacity-90 z-20 group-hover:text-orange-300 transition-colors">🔥</span>
                 
-                <!-- Texto Central -->
-                <span class="flex-grow text-center z-20">Etiqueta Dupla (Oferta X por Y)</span>
+                <span class="flex-grow text-center z-20">PREÇO  DE OFERTA</span>
             </a>
         </div>
 
-        <!-- Atribuição/Rodapé -->
-        <div class="text-sm text-gray-400 mt-10 font-normal">
-            Por: Lucas Coelho, 2025
+        <div class="text-sm text-gray-400 mt-12 font-normal">
+            Desenvolvido por: Lucas Coelho, 2025
         </div>
     </div>
 
