@@ -9,18 +9,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700;900&display=swap');
         /* Variáveis CSS para Dimensões e Posições (Padrão A4) */
         :root {
+            /* Tamanho Base (A4 Default) */
             --width: 210mm;
             --height: 297mm;
+            --main-font-size: 16px; 
+
             /* Variáveis de ajuste que serão alteradas via JS */
-            --weight-top: 15%;
-            --weight-right: 5%;
+            --weight-top: 25%;
+            --weight-right: 8%;
             --weight-rotate: -18deg;
-            /* Ajustes finos para este modelo */
-            --real-top: 0; /* Posição vertical do valor inteiro */
-            --centavos-top: -0.4em; /* Move os centavos mais para cima */
-            --centavos-margin-left: -85px; /* Sobrepõe mais os centavos (move para a esquerda) */
-            --text-cada-font-size: 3.5em; /* Tamanho da fonte do texto "CADA" */
-            --main-font-size: 16px;
+            
+            /* Ajustes finos para Preço/CADA (A4 Default) */
+            --real-top: 0.1em;
+            --centavos-top: -0.5em;
+            --centavos-margin-left: -85px;
+            --text-cada-font-size: 2.9em;
+
+            /* Preço (NOVAS VARIÁVEIS A4) */
+            --real-font-size: 23em;
+            --real-margin-left: -0.8em;
+            --real-transform-x: 1.3;
+            --centavos-font-size: 12em;
+            --centavos-line-height: 0.3;
+            --centavos-margin-right: -1em;
+            
+            /* Posição CADA e LOGO (A4 Default) */
+            --cada-top: 68%;
+            --cada-right: 20%;
+            --logo-top: 90%;
+            --logo-right: 297px;
         }
 
         body {
@@ -28,19 +45,24 @@
             text-align: center;
             background-color: #f0f0f0;
             margin: 0;
-            padding: 0;
+            padding: 0; /* CORREÇÃO: Removemos o padding de 20px */
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         /* Controles (Ocultados na impressão) */
         .controls {
+            margin-top: 20px; /* Adicionado margin para afastar do topo da tela */
             margin-bottom: 20px;
             padding: 15px;
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
         .controls button {
             background-color: #d90000;
@@ -54,6 +76,7 @@
             .controls { display: none; }
             .page-container { box-shadow: none; }
             * {
+                /* Garante que cores e backgrounds sejam impressos */
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
             }
@@ -75,9 +98,11 @@
             transition: width 0.3s, height 0.3s;
             font-size: var(--main-font-size);
             overflow: hidden;
-            border: 1px dashed #999;
+            /* LINHA PONTILHADA */
+            border: 1px dashed #999; 
         }
         
+        /* CORREÇÃO CHAVE: Define o tamanho da página de impressão e remove as margens do navegador */
         @page { size: var(--width) var(--height); margin: 0; }
 
         /* Estilos dos Textos (cores e fontes) */
@@ -90,7 +115,7 @@
             cursor: text;
         }
         @media print {
-             [contenteditable]:focus { outline: none; }
+            [contenteditable]:focus { outline: none; }
         }
 
         .editable-box {
@@ -145,46 +170,47 @@
 
         /* Valor Inteiro */
         .price-real-single {
-            font-size: 22em;
+            font-size: var(--real-font-size); 
             margin: 0;
             padding: 11;
             position: relative;
             top: var(--real-top);
             height: 1em;
             min-width: 1.5em;
-            margin-left: -0.8em;
-            transform: scaleX(1.2); /* aumenta a largura em 50% */
+            margin-left: var(--real-margin-left); 
+            transform: scaleX(var(--real-transform-x)); 
             display: inline-block;
         }
         
         /* Centavos */
         .price-centavos-single {
-            font-size: 12em;
+            font-size: var(--centavos-font-size); 
             font-weight: 900;
             position: relative;
             top: var(--centavos-top);
             margin-left: var(--centavos-margin-left);
             padding: 0;
-            line-height: 0.3;
+            line-height: var(--centavos-line-height); 
             min-width: 1.5em;
-            margin-right: -1em;
+            margin-right: var(--centavos-margin-right); 
             letter-spacing: 0.05em;
         }
 
         /* Texto CADA */
         .text-cada {
+            position: absolute; 
+            top: var(--cada-top);
+            right: var(--cada-right);
             font-size: var(--text-cada-font-size);
             font-weight: 900;
             color: black;
-            margin-top: -1em;
-            margin-bottom: 18em;
-            margin-right: -6.2em;
         }
 
         /* Logo */
         .logo-box {
             position: absolute;
-            bottom: 5%;
+            top: var(--logo-top);
+            right: var(--logo-right);
             padding: 0.5em 1.5em;
             background-color: #4c68d2;
             color: white;
@@ -236,58 +262,136 @@
     const sizes = {
         'A4': { 
             width: '210mm', height: '297mm', base_font: '16px',
-            '--weight-top': '15%', '--weight-right': '5%', '--weight-rotate': '-18deg',
-            '--real-top': '0',
-            '--centavos-top': '-0.6em', 
+            '--weight-top': '18%', '--weight-right': '8%', '--weight-rotate': '-18deg',
+            
+            // Posição CADA e LOGO
+            '--cada-top': '70%', '--cada-right': '18%',
+            '--logo-top': '90%', '--logo-right': '297px',
+            
+            // Posição Preço
+            '--real-top': '0.1em',
+            '--centavos-top': '-0.24em', 
             '--centavos-margin-left': '-85px', 
-            '--text-cada-font-size': '3.5em'
+            '--text-cada-font-size': '2.9em',
+            
+            // Propriedades de Estilo (Tamanho/Transformação)
+            '--real-font-size': '23em',
+            '--real-margin-left': '-0.8em',
+            '--real-transform-x': '1.3', 
+            '--centavos-font-size': '15em',
+            '--centavos-line-height': '0.3',
+            '--centavos-margin-right': '-1em'
         },
         'A5': { 
             width: '148mm', height: '210mm', base_font: '12px',
             '--weight-top': '18%', '--weight-right': '3%', '--weight-rotate': '-15deg',
-            '--real-top': '0',
-            '--centavos-top': '-0.6em', 
-            '--centavos-margin-left': '-60px', 
-            '--text-cada-font-size': '2.8em'
+            
+            // Posição CADA e LOGO
+            '--cada-top': '75%', '--cada-right': '20%',
+            '--logo-top': '90%', '--logo-right': '200px',
+            
+            // Posição Preço
+            '--real-top': '0.1em',
+            '--centavos-top': '-0.35em', 
+            '--centavos-margin-left': '-100px',
+            '--text-cada-font-size': '2.8em',
+            
+            // Propriedades de Estilo (Tamanho/Transformação)
+            '--real-font-size': '25em', 
+            '--real-margin-left': '-0.6em',
+            '--real-transform-x': '1.1',
+            '--centavos-font-size': '15em', 
+            '--centavos-line-height': '0.3',
+            '--centavos-margin-right': '-0.5em'
         },
         'A6': { 
             width: '105mm', height: '148mm', base_font: '9px',
+            // Peso
             '--weight-top': '18%', '--weight-right': '2%', '--weight-rotate': '-12deg',
-            '--real-top': '0',
-            '--centavos-top': '-0.6em', 
-            '--centavos-margin-left': '-45px', 
-            '--text-cada-font-size': '2.2em'
+            
+            // Posição CADA e LOGO
+            '--cada-top': '73%', '--cada-right': '23%', 
+            '--logo-top': '90%', '--logo-right': '143px', 
+            
+            // Posição Preço
+            '--real-top': '0.1em',
+            '--centavos-top': '-0.5em', 
+            '--centavos-margin-left': '-40px', 
+            '--text-cada-font-size': '2.3em', 
+            
+            // Propriedades de Estilo (Tamanho/Transformação)
+            '--real-font-size': '20em',      
+            '--real-margin-left': '-0.6em',  
+            '--real-transform-x': '1.05',    
+            '--centavos-font-size': '11em',   
+            '--centavos-line-height': '0.3',
+            '--centavos-margin-right': '-0.6em'  
         },
         'A7': { 
             width: '74mm', height: '105mm', base_font: '7px',
-            '--weight-top': '19%', '--weight-right': '1%', '--weight-rotate': '-10deg',
-            '--real-top': '0',
+            // Peso
+            '--weight-top': '23%', '--weight-right': '1%', '--weight-rotate': '-10deg',
+            
+            // Posição CADA e LOGO
+            '--cada-top': '79%', '--cada-right': '27%', 
+            '--logo-top': '90%', '--logo-right': '90px', 
+            
+            // Posição Preço
+            '--real-top': '0.02em',
             '--centavos-top': '-0.6em', 
             '--centavos-margin-left': '-35px', 
-            '--text-cada-font-size': '1.8em'
+            '--text-cada-font-size': '1.8em', 
+            
+            // Propriedades de Estilo (Tamanho/Transformação)
+            '--real-font-size': '17em',      
+            '--real-margin-left': '-0.6em',  
+            '--real-transform-x': '1.0',     
+            '--centavos-font-size': '9em',   
+            '--centavos-line-height': '0.3',
+            '--centavos-margin-right': '-0.4em'  
         }
     };
 
     function resizeOffer(sizeKey) {
         const size = sizes[sizeKey];
         if (size) {
+            // 1. Aplica as dimensões do container (CORREÇÃO ESSENCIAL)
             rootStyles.setProperty('--width', size.width);
             rootStyles.setProperty('--height', size.height);
             rootStyles.setProperty('--main-font-size', size.base_font);
-
+            
+            // 2. Aplica as variáveis de Posicionamento (Peso, CADA e Logo)
             rootStyles.setProperty('--weight-top', size['--weight-top']);
             rootStyles.setProperty('--weight-right', size['--weight-right']);
             rootStyles.setProperty('--weight-rotate', size['--weight-rotate']);
+            
+            rootStyles.setProperty('--cada-top', size['--cada-top']);
+            rootStyles.setProperty('--cada-right', size['--cada-right']);
+            rootStyles.setProperty('--logo-top', size['--logo-top']);
+            rootStyles.setProperty('--logo-right', size['--logo-right']);
+
+            // 3. Aplica as variáveis de Estilo e Posicionamento do Preço/Centavos
+            rootStyles.setProperty('--text-cada-font-size', size['--text-cada-font-size']);
+
             rootStyles.setProperty('--real-top', size['--real-top']);
             rootStyles.setProperty('--centavos-top', size['--centavos-top']);
             rootStyles.setProperty('--centavos-margin-left', size['--centavos-margin-left']);
-            rootStyles.setProperty('--text-cada-font-size', size['--text-cada-font-size']);
+            
+            rootStyles.setProperty('--real-font-size', size['--real-font-size']);
+            rootStyles.setProperty('--real-margin-left', size['--real-margin-left']);
+            rootStyles.setProperty('--real-transform-x', size['--real-transform-x']);
+            
+            rootStyles.setProperty('--centavos-font-size', size['--centavos-font-size']);
+            rootStyles.setProperty('--centavos-line-height', size['--centavos-line-height']);
+            rootStyles.setProperty('--centavos-margin-right', size['--centavos-margin-right']);
         }
     }
 
-    resizeOffer('A4');
+    // Inicializa o template para A4 ao carregar a página
+    window.onload = () => {
+        resizeOffer(document.getElementById('size-select').value);
+    };
 </script>
-
+    
 </body>
 </html>
-
