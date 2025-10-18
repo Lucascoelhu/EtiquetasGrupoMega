@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Principal - Gerador de Etiquetas</title>
+    <title>Menu Principal - Gerador de Preços</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
     
@@ -45,18 +45,30 @@
         .shine-effect:hover::after {
             transform: translateX(100%) skewX(-20deg); /* Move o brilho pela largura do botão */
         }
+        .gradient-text-blue-red {
+            background-image: linear-gradient(45deg, #3f7bbf, #e74c3c); /* primary-blue para btn-oferta */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
     </style>
 </head>
 <body class="bg-gray-900 font-sans flex items-center justify-center min-h-screen p-4">
 
     <div class="menu-container bg-white p-8 md:p-12 rounded-3xl shadow-2xl text-center max-w-sm w-full border-t-[10px] border-primary-blue transition duration-500 hover:shadow-primary-blue/50">
         
-        <div class="text-gray-900 text-3xl md:text-4xl font-extrabold mb-1 leading-tight uppercase tracking-wider">
-            🏷️ Gerador de Etiquetas
+        <div class="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight uppercase tracking-wide
+            relative inline-block transition-all duration-300 ease-in-out transform hover:scale-105
+            gradient-text-blue-red text-shadow-lg">
+                🏷️ Gerador de Preço️s
         </div>
         
+        <div class="text-gray-800 text-md mb-8 font-medium">
+            - Grupo Mega -
+        </div>
         <div class="text-gray-500 text-md mb-8 font-medium">
-            Grupo Mega - Selecione o Tipo de Etiqueta
+            Selecione o Tipo de Preço
         </div>
         
         <div class="flex flex-col space-y-6">
