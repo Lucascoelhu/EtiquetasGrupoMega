@@ -11,17 +11,17 @@
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700;900&display=swap');
         
         :root {
-            /* Variáveis CSS para Dimensões e Posições (Padrão A4) */
-            --width: 210mm;
-            --height: 297mm;
+            /* Variáveis CSS para Dimensões e Posições (Padrão A7 - INICIADO AQUI) */
+            --width: 74mm;
+            --height: 105mm;
             /* Variáveis de ajuste que serão alteradas via JS */
-            --weight-top: 16%;
-            --weight-right: 5%;
-            --weight-rotate: -18deg;
-            --currency-top: 2em;
+            --weight-top: 25%;
+            --weight-right: 1%;
+            --weight-rotate: -10deg;
+            --currency-top: 1.4em;
             --centavos-top: 0.1em;
-            --centavos-margin-left: -61px;
-            --main-font-size: 16px;
+            --centavos-margin-left: -25px;
+            --main-font-size: 7px;
         }
 
         body {
@@ -107,6 +107,8 @@
             transition: width 0.3s, height 0.3s;
             font-size: var(--main-font-size);
             overflow: hidden;
+            /* CONFI GURAÇÃO: LINHA PONTILHADA NAS BORDAS */
+            border: 1px dashed black;
         }
         
         /* --- ESTILOS VISUAIS E DE CONTEÚDO --- */
@@ -246,7 +248,7 @@
 <div class="controls">
     <label for="size-select" class="text-sm font-semibold text-gray-700">Redimensionar para:</label>
     <select id="size-select" onchange="resizeOffer(this.value)" class="p-2 border border-gray-300 rounded-lg">
-        <option value="A4" selected>A4 (210 x 297 mm)</option>
+        <option value="A4" selected> A4 (210 x 297 mm)</option>
         <option value="A5">A5 (148 x 210 mm)</option>
         <option value="A6">A6 (105 x 148 mm)</option>
         <option value="A7">A7 (74 x 105 mm)</option>
@@ -302,32 +304,52 @@
     // Configurações de escala para cada formato
     const sizes = {
         'A4': { 
-            width: '210mm', height: '297mm', base_font: '16px',
+            width: '210mm', 
+            height: '297mm', 
+            base_font: '18px',
             // Ajustes de Posicionamento A4
-            '--weight-top': '16%', '--weight-right': '5%', '--weight-rotate': '-18deg',
+            '--weight-top': '16%', 
+            '--weight-right': '5%', 
+            '--weight-rotate': '-18deg',
             '--currency-top': '2em',
-            '--centavos-top': '0.1em', '--centavos-margin-left': '-61px'
+            '--centavos-top': '0.1em', 
+            '--centavos-margin-left': '-61px'
         },
         'A5': { 
-            width: '148mm', height: '210mm', base_font: '12px',
+            width: '148mm', 
+            height: '210mm', 
+            base_font: '12.5px',
             // Ajustes de Posicionamento A5
-            '--weight-top': '18%', '--weight-right': '3%', '--weight-rotate': '-15deg',
+            '--weight-top': '18%', 
+            '--weight-right': '3%', 
+            '--weight-rotate': '-15deg',
             '--currency-top': '1.8em',
-            '--centavos-top': '0.1em', '--centavos-margin-left': '-45px' 
+            '--centavos-top': '0.1em', 
+            '--centavos-margin-left': '-45px' 
         },
         'A6': { 
-            width: '105mm', height: '148mm', base_font: '9px',
+            width: '105mm', 
+            height: '148mm', 
+            base_font: '8.5px',
             // Ajustes de Posicionamento A6
-            '--weight-top': '18%', '--weight-right': '2%', '--weight-rotate': '-12deg',
+            '--weight-top': '18%', 
+            '--weight-right': '2%', 
+            '--weight-rotate': '-12deg',
             '--currency-top': '1.6em',
-            '--centavos-top': '0.1em', '--centavos-margin-left': '-35px'
+            '--centavos-top': '0.1em', 
+            '--centavos-margin-left': '-35px'
         },
         'A7': { 
-            width: '74mm', height: '105mm', base_font: '7px',
+            width: '74mm', 
+            height: '105mm', 
+            base_font: '6px',
             // Ajustes de Posicionamento A7
-            '--weight-top': '25%', '--weight-right': '1%', '--weight-rotate': '-10deg',
+            '--weight-top': '25%', 
+            '--weight-right': '1%', 
+            '--weight-rotate': '-10deg',
             '--currency-top': '1.4em',
-            '--centavos-top': '0.1em', '--centavos-margin-left': '-25px'
+            '--centavos-top': '0.0.8em', 
+            '--centavos-margin-left': '-25px'
         }
     };
 
@@ -361,6 +383,7 @@
 
     // Inicializa o tamanho padrão e configura os eventos
     document.addEventListener('DOMContentLoaded', () => {
+        // CONFI GURAÇÃO: Inicializa para A7
         resizeOffer('A4');
         
         // Adiciona o listener 'blur' (quando o foco sai do campo) para a nova classe
