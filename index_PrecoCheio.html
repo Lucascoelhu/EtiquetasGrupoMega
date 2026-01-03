@@ -453,11 +453,14 @@
     });
     
     // Inicializa o template para A4 ao carregar a página
-    window.onload = () => {
-        resizeOffer(document.getElementById('size-select').value);
+       window.onload = () => {
+        resizeOffer('A5');
+    // Isso aplica o estilo visual de "selecionado" ao botão A5
+        document.querySelectorAll('.size-btn')[1].focus(); 
     };
 </script>
     
 </body>
 </html>
+
 
