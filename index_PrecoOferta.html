@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <style>
         /* [ ... restante do CSS (não alterado) ... ] */
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700;900&display=swap');
-        
+
         :root {
             --width: 74mm;
             --height: 105mm;
@@ -38,40 +39,47 @@
             padding: 15px;
             background: #fff;
             border-radius: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             display: flex;
             gap: 1rem;
             align-items: center;
         }
-        .controls button, .controls a button { /* Garante que os botões (diretos ou em links) tenham estilo base */
+
+        .controls button,
+        .controls a button {
+            /* Garante que os botões (diretos ou em links) tenham estilo base */
             background-color: #d90000;
             transition: background-color 0.2s;
             /* Classes do Tailwind que já estavam no HTML: */
             /* px-4 py-2 font-bold text-white bg-red-600 rounded-lg shadow-md transition-all duration-150 */
         }
-        .controls button:hover, .controls a button:hover {
+
+        .controls button:hover,
+        .controls a button:hover {
             background-color: #b00000;
         }
 
         /* [ ... restante do CSS (regras de impressão, page-container, etc.) ... ] */
-        @page { 
-            size: var(--width) var(--height); 
+        @page {
+            size: var(--width) var(--height);
             margin: 0;
         }
-        
+
         @media print {
-            .controls { display: none; }
-            
+            .controls {
+                display: none;
+            }
+
             body {
                 margin: 0 !important;
                 padding: 0 !important;
-                background-color: white; 
-                overflow: hidden !important; 
+                background-color: white;
+                overflow: hidden !important;
             }
 
-            .page-container { 
-                box-shadow: none; 
-                margin: 0 !important; 
+            .page-container {
+                box-shadow: none;
+                margin: 0 !important;
                 padding: 4% 5% !important;
                 width: var(--width) !important;
                 height: var(--height) !important;
@@ -83,82 +91,105 @@
                 color-adjust: exact !important;
             }
         }
-        
+
         .page-container {
             width: var(--width);
             height: var(--height);
             background-color: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 4% 5%; 
+            padding: 4% 5%;
             box-sizing: border-box;
             position: relative;
             transition: width 0.3s, height 0.3s;
             font-size: var(--main-font-size);
             overflow: hidden;
-            
-            border: 1px dashed #999; 
+
+            border: 1px dashed #999;
         }
-        
-        .color-red { color: #d90000; }
-        .text-black { color: black; }
-        .font-impact { font-family: Impact, 'Impact', sans-serif; }
+
+        .color-red {
+            color: #d90000;
+        }
+
+        .text-black {
+            color: black;
+        }
+
+        .font-impact {
+            font-family: Impact, 'Impact', sans-serif;
+        }
 
         [contenteditable]:focus {
             outline: 2px dashed rgba(0, 0, 0, 0.4);
             cursor: text;
         }
+
         @media print {
-             [contenteditable]:focus { outline: none; }
+            [contenteditable]:focus {
+                outline: none;
+            }
         }
-        
-        .editable-box { display: inline-block; text-align: center; }
-        
-        .offer-title { 
-            font-size: 6em; 
-            font-weight: 900; 
-            margin-top: 0.5em; 
-            margin-bottom: 0.6em; 
-            letter-spacing: 1.2px; 
+
+        .editable-box {
+            display: inline-block;
+            text-align: center;
+        }
+
+        .offer-title {
+            font-size: 6em;
+            font-weight: 900;
+            margin-top: 0.5em;
+            margin-bottom: 0.6em;
+            letter-spacing: 1.2px;
             line-height: 0.9;
         }
 
-        .weight-box { 
-            position: absolute; 
-            top: var(--weight-top); 
-            right: var(--weight-right); 
-            font-size: 1.4em; 
-            transform: rotate(var(--weight-rotate)); 
+        .weight-box {
+            position: absolute;
+            top: var(--weight-top);
+            right: var(--weight-right);
+            font-size: 1.4em;
+            transform: rotate(var(--weight-rotate));
             font-weight: bold;
             min-width: 80px;
         }
-        
-        .description, .pullman { font-size: 2.1em; font-weight: 900; line-height: 1.1; margin-bottom: 0.2em; }
-        .pullman { margin-bottom: 1.5em; }
+
+        .description,
+        .pullman {
+            font-size: 2.1em;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 0.2em;
+        }
+
+        .pullman {
+            margin-bottom: 1.5em;
+        }
 
         .price-line {
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            margin: -1.2em 0; 
+            margin: -1.2em 0;
             line-height: 1;
-            
+
         }
 
-        .qty-value { 
-            font-size: 12em; 
-            margin-right: 0.1em; 
-            min-width: 0.6em; 
+        .qty-value {
+            font-size: 12em;
+            margin-right: 0.1em;
+            min-width: 0.6em;
             transform: scaleX(1.1);
             display: inline-block;
             transform: scaleY(1.3);
             display: inline-block;
             text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.8);
         }
-        
+
         .currency-symbol {
             font-size: 2.4em;
             position: relative;
@@ -168,8 +199,11 @@
             margin-right: -0.5em;
         }
 
-        .price-group { display: flex; align-items: flex-start; }
-        
+        .price-group {
+            display: flex;
+            align-items: flex-start;
+        }
+
         .price-real {
             font-size: 12em;
             margin: 0;
@@ -181,9 +215,9 @@
             transform: scaleY(1.3);
             display: inline-block;
             text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.8);
-            
+
         }
-        
+
         .price-centavos {
             font-size: 8em;
             font-weight: 500;
@@ -196,27 +230,29 @@
             text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.8);
         }
 
-        .separator-ou-line { 
-            display: flex; 
-            align-items: center; 
-            width: 99%; 
+        .separator-ou-line {
+            display: flex;
+            align-items: center;
+            width: 99%;
             margin: 2em auto;
             margin-top: 2.6em;
         }
-        .separator-ou { 
-            font-size: 2em; 
-            font-weight: bold; 
-            color: #d90000; 
-            padding: 0 12px; 
-            white-space: nowrap; 
-            cursor: text; 
+
+        .separator-ou {
+            font-size: 2em;
+            font-weight: bold;
+            color: #d90000;
+            padding: 0 12px;
+            white-space: nowrap;
+            cursor: text;
         }
-        .line { 
-            flex-grow: 1; 
-            height: 0; 
-            border-top: 1px solid black; 
+
+        .line {
+            flex-grow: 1;
+            height: 0;
+            border-top: 1px solid black;
         }
-        
+
         .logo-box {
             margin-top: 5em;
             padding: 0.5em 1.5em;
@@ -228,164 +264,192 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="controls bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 p-4 rounded-xl shadow-lg">
-    <label for="size-select" class="text-base font-extrabold text-white tracking-wide">
-        Redimensionar para:
-    </label>    
-    <select id="size-select" onchange="resizeOffer(this.value)" class="p-2 border-2 border-red-400 rounded-lg shadow-inner focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150">
-        <option value="A4"selected >A4 (210 x 297 mm)</option>
-        <option value="A5">A5 (148 x 210 mm)</option>
-        <option value="A6">A6 (105 x 148 mm)</option>
-        <option value="A7">A7 (74 x 105 mm)</option>
-    </select>
-    
-    <button onclick="window.print()" class="print-button px-5 py-2 font-bold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-lg shadow-xl transition-all duration-150 transform hover:scale-105">
-        🖨️ Imprimir Oferta
-    </button>
-    
-    <a href="index.html">
-        <button class="menu-button px-5 py-2 font-bold text-white bg-gray-600 hover:bg-gray-700 active:bg-gray-800 rounded-lg shadow-xl transition-all duration-150 transform hover:scale-105">
-            🔙 Voltar para o Menu
-        </button>
-    </a>
-</div>
-
-<div class="page-container" id="offer-page">
-
-    <div class="offer-title color-red font-impact" contenteditable="true">OFERTA</div>
-
-    <div class="weight-box text-black editable-box" contenteditable="true">480G</div>
-
-    <div class="description text-black uppercase-on-blur" contenteditable="true">NOME DO PRODUTO</div>
-    <div class="description text-black uppercase-on-blur" contenteditable="true">DESCRIÇÃO</div>
-    <div class="pullman color-red uppercase-on-blur" contenteditable="true">MARCA</div>
-
-    <div class="price-line">
-        <span class="qty-value color-red font-impact editable-box" contenteditable="true">1</span>
-        
-        <span class="currency-symbol text-black" contenteditable="true">por</span>
-        
-        <div class="price-group color-red font-impact">
-            <span class="price-real editable-box" contenteditable="true">6</span>
-            <span class="price-centavos editable-box" contenteditable="true">,00</span>
-        </div>
-    </div>
-
-    <div class="separator-ou-line">
-        <div class="line"></div>
-        <div class="separator-ou" contenteditable="true">OU</div>
-        <div class="line"></div>
-    </div>
-
-    <div class="price-line">
-        <span class="qty-value color-red font-impact editable-box" contenteditable="true">2</span>
-        
-        <span class="currency-symbol text-black" contenteditable="true">por</span>
-        
-        <div class="price-group color-red font-impact">
-            <span class="price-real editable-box" contenteditable="true">10</span>
-            <span class="price-centavos editable-box" contenteditable="true">,00</span>
-        </div>
-    </div>
-
-    <div class="logo-box" contenteditable="true">
-        GRUPO MEGA
-    </div>
-</div>
-
-<script>
-    // [ ... restante do JS (não alterado) ... ]
-    const sizes = {
-        'A4': { 
-            width: '210mm', 
-            height: '297mm', 
-            base_font: '17px',
-            '--weight-top': '16%', 
-            '--weight-right': '5%', 
-            '--weight-rotate': '-18deg',
-            '--currency-top': '2em',
-            '--centavos-top': '0.em', 
-            '--centavos-margin-left': '-61px'
-        },
-        'A5': { 
-            width: '148mm', 
-            height: '210mm', 
-            base_font: '12.5px',
-            '--weight-top': '18%', 
-            '--weight-right': '3%', 
-            '--weight-rotate': '-15deg',
-            '--currency-top': '1.8em',
-            '--centavos-top': '0em', 
-            '--centavos-margin-left': '-45px' 
-        },
-        'A6': { 
-            width: '105mm', 
-            height: '148mm', 
-            base_font: '8.5px',
-            '--weight-top': '18%', 
-            '--weight-right': '2%', 
-            '--weight-rotate': '-12deg',
-            '--currency-top': '1.6em',
-            '--centavos-top': '0em', 
-            '--centavos-margin-left': '-35px'
-        },
-        'A7': { 
-            width: '74mm', 
-            height: '105mm', 
-            base_font: '6px',
-            '--weight-top': '25%', 
-            '--weight-right': '1%', 
-            '--weight-rotate': '-10deg',
-            '--currency-top': '1.4em',
-            '--centavos-top': '0.0.8em', 
-            '--centavos-margin-left': '-25px'
-        }
-    };
-
-    const root = document.documentElement;
-
-    function resizeOffer(sizeKey) {
-        const size = sizes[sizeKey];
-        if (size) {
-            root.style.setProperty('--width', size.width);
-            root.style.setProperty('--height', size.height);
-            root.style.setProperty('--main-font-size', size.base_font);
-
-            root.style.setProperty('--weight-top', size['--weight-top']);
-            root.style.setProperty('--weight-right', size['--weight-right']);
-            root.style.setProperty('--weight-rotate', size['--weight-rotate']);
-            root.style.setProperty('--currency-top', size['--currency-top']);
-            root.style.setProperty('--centavos-top', size['--centavos-top']);
-            root.style.setProperty('--centavos-margin-left', size['--centavos-margin-left']);
+    <style>
+    /* Esta regra mágica esconde qualquer coisa com a classe 'no-print' na hora da impressão */
+    @media print {
+        .no-print {
+            display: none !important;
         }
     }
 
-    function toUpperCase(event) {
-        const element = event.target;
-        if (element.textContent) {
-            element.textContent = element.textContent.toUpperCase();
-        }
+    /* Estilo para manter o botão selecionado visualmente (opcional) */
+    .size-btn:focus {
+        background-color: #2563eb !important;
+        color: white !important;
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
     }
+</style>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        resizeOffer('A4');
-        
-        document.querySelectorAll('.uppercase-on-blur').forEach(element => {
-            element.addEventListener('blur', toUpperCase);
-        });
+<div class="no-print max-w-3xl bg-[#111827] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden font-sans mx-auto my-4">
+    <div class="px-6 py-4 bg-[#1f2937]/50 border-b border-gray-800 flex justify-between items-center">
+        <h3 class="text-gray-300 font-bold text-sm tracking-tight flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+            PAINEL DE CONTROLE
+        </h3>
+        <span class="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Interface Oculta na Impressão</span>
+    </div>
 
-        document.querySelectorAll('.uppercase-on-blur').forEach(element => {
-            toUpperCase({ target: element });
+    <div class="p-6 bg-gradient-to-b from-[#111827] to-[#0f172a]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            
+            <div class="space-y-3">
+                <p class="text-xs font-semibold text-gray-500 uppercase ml-1 tracking-wider">Escolha o Tamanho</p>
+                <div class="inline-flex w-full p-1 bg-[#1f2937] rounded-xl border border-gray-700/50">
+                    <button onclick="resizeOffer('A4')" class="size-btn flex-1 px-4 py-2.5 text-sm font-bold text-gray-400 rounded-lg transition-all hover:text-white hover:bg-gray-700/50 active:scale-95">A4</button>
+                    <button onclick="resizeOffer('A5')" class="size-btn flex-1 px-4 py-2.5 text-sm font-bold text-gray-400 rounded-lg transition-all hover:text-white hover:bg-gray-700/50 active:scale-95">A5</button>
+                    <button onclick="resizeOffer('A6')" class="size-btn flex-1 px-4 py-2.5 text-sm font-bold text-gray-400 rounded-lg transition-all hover:text-white hover:bg-gray-700/50 active:scale-95">A6</button>
+                    <button onclick="resizeOffer('A7')" class="size-btn flex-1 px-4 py-2.5 text-sm font-bold text-gray-400 rounded-lg transition-all hover:text-white hover:bg-gray-700/50 active:scale-95">A7</button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <button onclick="window.print()" class="group relative flex items-center justify-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all shadow-lg overflow-hidden border border-blue-400/30">
+                    <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    <span class="font-black text-sm">IMPRIMIR AGORA</span>
+                </button>
+                <p class="text-[10px] text-center text-gray-600 uppercase font-bold">O menu não sairá no papel</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+    <div class="page-container" id="offer-page">
+
+        <div class="offer-title color-red font-impact" contenteditable="true">OFERTA</div>
+
+        <div class="weight-box text-black editable-box" contenteditable="true">480G</div>
+
+        <div class="description text-black uppercase-on-blur" contenteditable="true">NOME DO PRODUTO</div>
+        <div class="description text-black uppercase-on-blur" contenteditable="true">DESCRIÇÃO</div>
+        <div class="pullman color-red uppercase-on-blur" contenteditable="true">MARCA</div>
+
+        <div class="price-line">
+            <span class="qty-value color-red font-impact editable-box" contenteditable="true">1</span>
+
+            <span class="currency-symbol text-black" contenteditable="true">por</span>
+
+            <div class="price-group color-red font-impact">
+                <span class="price-real editable-box" contenteditable="true">6</span>
+                <span class="price-centavos editable-box" contenteditable="true">,00</span>
+            </div>
+        </div>
+
+        <div class="separator-ou-line">
+            <div class="line"></div>
+            <div class="separator-ou" contenteditable="true">OU</div>
+            <div class="line"></div>
+        </div>
+
+        <div class="price-line">
+            <span class="qty-value color-red font-impact editable-box" contenteditable="true">2</span>
+
+            <span class="currency-symbol text-black" contenteditable="true">por</span>
+
+            <div class="price-group color-red font-impact">
+                <span class="price-real editable-box" contenteditable="true">10</span>
+                <span class="price-centavos editable-box" contenteditable="true">,00</span>
+            </div>
+        </div>
+
+        <div class="logo-box" contenteditable="true">
+            GRUPO MEGA
+        </div>
+    </div>
+
+    <script>
+        // [ ... restante do JS (não alterado) ... ]
+        const sizes = {
+            'A4': {
+                width: '210mm',
+                height: '297mm',
+                base_font: '17px',
+                '--weight-top': '16%',
+                '--weight-right': '5%',
+                '--weight-rotate': '-18deg',
+                '--currency-top': '2em',
+                '--centavos-top': '0.em',
+                '--centavos-margin-left': '-61px'
+            },
+            'A5': {
+                width: '148mm',
+                height: '210mm',
+                base_font: '12.5px',
+                '--weight-top': '18%',
+                '--weight-right': '3%',
+                '--weight-rotate': '-15deg',
+                '--currency-top': '1.8em',
+                '--centavos-top': '0em',
+                '--centavos-margin-left': '-45px'
+            },
+            'A6': {
+                width: '105mm',
+                height: '148mm',
+                base_font: '8.5px',
+                '--weight-top': '18%',
+                '--weight-right': '2%',
+                '--weight-rotate': '-12deg',
+                '--currency-top': '1.6em',
+                '--centavos-top': '0em',
+                '--centavos-margin-left': '-35px'
+            },
+            'A7': {
+                width: '74mm',
+                height: '105mm',
+                base_font: '6px',
+                '--weight-top': '25%',
+                '--weight-right': '1%',
+                '--weight-rotate': '-10deg',
+                '--currency-top': '1.4em',
+                '--centavos-top': '0.0.8em',
+                '--centavos-margin-left': '-25px'
+            }
+        };
+
+        const root = document.documentElement;
+
+        function resizeOffer(sizeKey) {
+            const size = sizes[sizeKey];
+            if (size) {
+                root.style.setProperty('--width', size.width);
+                root.style.setProperty('--height', size.height);
+                root.style.setProperty('--main-font-size', size.base_font);
+
+                root.style.setProperty('--weight-top', size['--weight-top']);
+                root.style.setProperty('--weight-right', size['--weight-right']);
+                root.style.setProperty('--weight-rotate', size['--weight-rotate']);
+                root.style.setProperty('--currency-top', size['--currency-top']);
+                root.style.setProperty('--centavos-top', size['--centavos-top']);
+                root.style.setProperty('--centavos-margin-left', size['--centavos-margin-left']);
+            }
+        }
+
+        function toUpperCase(event) {
+            const element = event.target;
+            if (element.textContent) {
+                element.textContent = element.textContent.toUpperCase();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            resizeOffer('A4');
+
+            document.querySelectorAll('.uppercase-on-blur').forEach(element => {
+                element.addEventListener('blur', toUpperCase);
+            });
+
+            document.querySelectorAll('.uppercase-on-blur').forEach(element => {
+                toUpperCase({
+                    target: element
+                });
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>
-
-
-
-
-
