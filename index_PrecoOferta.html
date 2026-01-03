@@ -449,20 +449,27 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            resizeOffer('A4');
+    // 1. Define o tamanho A5 como padrão
+    resizeOffer('A5');
 
-            document.querySelectorAll('.uppercase-on-blur').forEach(element => {
-                element.addEventListener('blur', toUpperCase);
-            });
+    // 2. Procura todos os botões e foca no segundo (índice 1), que é o A5
+    const botoes = document.querySelectorAll('.size-btn');
+    if (botoes.length > 1) {
+        botoes[1].focus();
+    }
 
-            document.querySelectorAll('.uppercase-on-blur').forEach(element => {
-                toUpperCase({
-                    target: element
-                });
-            });
-        });
+    // O restante do seu código (uppercase) continua igual abaixo...
+    document.querySelectorAll('.uppercase-on-blur').forEach(element => {
+        element.addEventListener('blur', toUpperCase);
+    });
+
+    document.querySelectorAll('.uppercase-on-blur').forEach(element => {
+        toUpperCase({ target: element });
+    });
+});
     </script>
 
 </body>
 
 </html>
+
