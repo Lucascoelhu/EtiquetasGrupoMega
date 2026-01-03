@@ -223,26 +223,55 @@
 </head>
 <body>
 
-<div class="controls bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 p-4 rounded-xl shadow-lg">
-    <label for="size-select" class="text-base font-extrabold text-white tracking-wide">
-        Redimensionar para:
-    </label>    
-    <select id="size-select" onchange="resizeOffer(this.value)" class="p-2 border-2 border-red-400 rounded-lg shadow-inner focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150">
-        <option value="A4"selected >A4 (210 x 297 mm)</option>
-        <option value="A5" >A5 (148 x 210 mm)</option>
-        <option value="A6">A6 (105 x 148 mm)</option>
-        <option value="A7">A7 (74 x 105 mm)</option>
-    </select>
-    
-    <button onclick="window.print()" class="print-button px-5 py-2 font-bold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-lg shadow-xl transition-all duration-150 transform hover:scale-105">
-        🖨️ Imprimir Oferta
-    </button>
-    
-    <a href="index.html">
-        <button class="menu-button px-5 py-2 font-bold text-white bg-gray-600 hover:bg-gray-700 active:bg-gray-800 rounded-lg shadow-xl transition-all duration-150 transform hover:scale-105">
-            🔙 Voltar para o Menu
-        </button>
-    </a>
+<style>
+    /* Esta regra mágica esconde qualquer coisa com a classe 'no-print' na hora da impressão */
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+    }
+
+    /* Estilo para manter o botão selecionado visualmente (opcional) */
+    .size-btn:focus {
+        background-color: #2563eb !important;
+        color: white !important;
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+    }
+</style>
+
+<div class="no-print max-w-3xl bg-[#111827] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden font-sans mx-auto my-4">
+    <div class="px-6 py-4 bg-[#1f2937]/50 border-b border-gray-800 flex justify-between items-center">
+        <h3 class="text-gray-300 font-bold text-sm tracking-tight flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+            PAINEL DE CONTROLE
+        </h3>
+        <span class="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Grupo mega</span>
+    </div>
+
+    <div class="p-6 bg-gradient-to-b from-[#111827] to-[#0f172a]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            
+            <div class="space-y-3">
+                <p class="text-xs font-semibold text-gray-500 uppercase ml-1 tracking-wider">Escolha o Tamanho</p>
+                <div class="inline-flex w-full p-1 bg-[#1f2937] rounded-xl border border-gray-700/50">
+                    <button onclick="resizeOffer('A4')" class="size-btn flex-1 px-4 py-2.5 text-sm font-bold text-gray-400 rounded-lg transition-all hover:text-white hover:bg-gray-700/50 active:scale-95">A4</button>
+                    <button onclick="resizeOffer('A5')" class="size-btn flex-1 px-4 py-2.5 text-sm font-bold text-gray-400 rounded-lg transition-all hover:text-white hover:bg-gray-700/50 active:scale-95">A5</button>
+                    <button onclick="resizeOffer('A6')" class="size-btn flex-1 px-4 py-2.5 text-sm font-bold text-gray-400 rounded-lg transition-all hover:text-white hover:bg-gray-700/50 active:scale-95">A6</button>
+                    <button onclick="resizeOffer('A7')" class="size-btn flex-1 px-4 py-2.5 text-sm font-bold text-gray-400 rounded-lg transition-all hover:text-white hover:bg-gray-700/50 active:scale-95">A7</button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <button onclick="window.print()" class="group relative flex items-center justify-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all shadow-lg overflow-hidden border border-blue-400/30">
+                    <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    <span class="font-black text-sm">IMPRIMIR AGORA</span>
+                </button>
+                <p class="text-[10px] text-center text-gray-600 uppercase font-bold">preços</p>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <div class="page-container" id="offer-page-single">
@@ -419,6 +448,5 @@
     
 </body>
 </html>
-
 
 
